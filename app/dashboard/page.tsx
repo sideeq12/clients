@@ -18,10 +18,7 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    ResponsiveContainer,
-    BarChart,
-    Bar,
-    Cell
+    ResponsiveContainer
 } from "recharts";
 
 const performanceData = [
@@ -34,12 +31,7 @@ const performanceData = [
     { name: "Jul", visits: 3490, leads: 430 },
 ];
 
-const trafficData = [
-    { name: "Meta Ads", value: 45, color: "#2563eb" },
-    { name: "Google SEO", value: 30, color: "#3b82f6" },
-    { name: "Direct", value: 15, color: "#60a5fa" },
-    { name: "Email", value: 10, color: "#93c5fd" },
-];
+
 
 const stats = [
     { name: "Total Clients", value: "1,284", change: "+12.5%", trend: "up", icon: Users },
@@ -58,11 +50,11 @@ export default function DashboardPage() {
                     <p className="text-foreground/60">Performance overview for your campaigns.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium hover:bg-foreground/5 transition-all">
+                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-card border border-border text-sm font-medium hover:bg-foreground/5 transition-colors">
                         <Calendar className="h-4 w-4" />
                         Last 30 Days
                     </button>
-                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium shadow-sm hover:bg-primary/90 transition-colors">
                         Download Report
                     </button>
                 </div>
@@ -71,7 +63,7 @@ export default function DashboardPage() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat) => (
-                    <div key={stat.name} className="p-6 rounded-2xl bg-card border border-border shadow-sm">
+                    <div key={stat.name} className="p-6 rounded-lg bg-card border border-border shadow-sm">
                         <div className="flex items-center justify-between mb-4">
                             <div className="p-2 rounded-lg bg-primary/5">
                                 <stat.icon className="h-5 w-5 text-primary" />
@@ -100,9 +92,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {/* Main Performance Chart */}
-                <div className="lg:col-span-2 p-6 rounded-2xl bg-card border border-border shadow-sm space-y-6">
+                <div className="p-6 rounded-lg bg-card border border-border shadow-sm space-y-6">
                     <div className="flex items-center justify-between">
                         <h3 className="font-bold">Conversion Growth</h3>
                         <div className="flex items-center gap-4 text-xs">
@@ -155,44 +147,6 @@ export default function DashboardPage() {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* Traffic Sources Chart */}
-                <div className="p-6 rounded-2xl bg-card border border-border shadow-sm space-y-6">
-                    <h3 className="font-bold">Traffic Source Allocation</h3>
-                    <div className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={trafficData} layout="vertical">
-                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" />
-                                <XAxis type="number" hide />
-                                <YAxis
-                                    dataKey="name"
-                                    type="category"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: 'var(--foreground)', fontSize: 12 }}
-                                    width={80}
-                                />
-                                <Tooltip cursor={{ fill: 'transparent' }} />
-                                <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                                    {trafficData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="space-y-4">
-                        {trafficData.map((item) => (
-                            <div key={item.name} className="flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }}></div>
-                                    <span className="text-foreground/60">{item.name}</span>
-                                </div>
-                                <span className="font-bold">{item.value}%</span>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>

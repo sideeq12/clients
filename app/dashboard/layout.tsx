@@ -28,21 +28,29 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
         <div className="min-h-screen bg-background flex">
+            {/* Mobile Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
             <aside
-                className={`${isSidebarOpen ? "w-64" : "w-20"
-                    } border-r border-border bg-card transition-all duration-300 flex flex-col hidden md:flex`}
+                className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    } md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 w-64 border-r border-border bg-card transition-transform duration-300 flex flex-col`}
             >
                 <div className="h-16 flex items-center px-6 border-b border-border">
                     <div className="flex items-center gap-3 overflow-hidden">
                         <div className="h-8 w-8 rounded-lg bg-primary shrink-0 flex items-center justify-center">
                             <LayoutDashboard className="h-5 w-5 text-primary-foreground" />
                         </div>
-                        {isSidebarOpen && <span className="font-bold text-lg truncate">Lovissa</span>}
+                        <span className="font-bold text-lg truncate">Lovissa</span>
                     </div>
                 </div>
 
@@ -51,10 +59,11 @@ export default function DashboardLayout({
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground/60 hover:text-primary hover:bg-primary/5 transition-all"
+                            onClick={() => setIsSidebarOpen(false)}
+                            className="group flex items-center gap-3 px-3 py-2.5 rounded-md text-foreground/60 hover:text-primary hover:bg-primary/5 transition-colors"
                         >
                             <link.icon className="h-5 w-5 shrink-0" />
-                            {isSidebarOpen && <span className="font-medium">{link.name}</span>}
+                            <span className="font-medium">{link.name}</span>
                         </Link>
                     ))}
                 </nav>
@@ -62,10 +71,10 @@ export default function DashboardLayout({
                 <div className="p-4 border-t border-border">
                     <Link
                         href="/login"
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground/60 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-md text-foreground/60 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                     >
                         <LogOut className="h-5 w-5 shrink-0" />
-                        {isSidebarOpen && <span className="font-medium">Logout</span>}
+                        <span className="font-medium">Logout</span>
                     </Link>
                 </div>
             </aside>

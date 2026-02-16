@@ -26,8 +26,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8">
         {/* Branding */}
         <div className="text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/20">
-            <LogIn className="h-8 w-8 text-primary-foreground" />
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-primary shadow-md">
+            <LogIn className="h-7 w-7 text-primary-foreground" />
           </div>
           <p className="mt-6 text-sm text-foreground/60">
             Welcome back to Lovissa Consulting
@@ -35,7 +35,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-xl shadow-black/5">
+        <div className="rounded-lg border border-border bg-card p-8 shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label
@@ -97,7 +97,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
+              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-70"
             >
               {isLoading ? (
                 <>
