@@ -19,39 +19,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 relative">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
+    <div className="flex min-h-screen relative bg-background text-foreground font-sans overflow-hidden">
+      {/* Mobile Background Image (Visible only on small screens) */}
+      <div
+        className="absolute inset-0 z-0 md:hidden bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/bg-image.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
       </div>
-      <div className="w-full max-w-md space-y-8">
-        {/* Branding */}
-        <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-primary shadow-md">
-            <LogIn className="h-7 w-7 text-primary-foreground" />
+
+      {/* Left Side: Login Form */}
+      <div className="flex w-full flex-col justify-between p-8 md:w-1/2 lg:w-[40%] xl:w-[35%] relative z-10 md:bg-background">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary shadow-sm">
+              <LogIn className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="text-xl font-bold tracking-tight">Lovissa</span>
           </div>
-          <p className="mt-6 text-sm text-foreground/60">
-            Welcome back to Lovissa Consulting
-          </p>
+          <ThemeToggle />
         </div>
 
-        {/* Login Form */}
-        <div className="rounded-lg border border-border bg-card p-8 shadow-lg">
+        <div className="mx-auto w-full max-w-sm space-y-8 py-12">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight">Client Login</h1>
+            <p className="text-muted-foreground">
+              Enter your credentials to access your portal.
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-medium leading-none"
               >
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40" />
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
                 <input
                   id="email"
                   type="email"
                   placeholder="name@company.com"
                   required
-                  className="flex h-11 w-full rounded-xl border border-input bg-background px-10 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
+                  className="flex h-11 w-full rounded-xl border border-input bg-background px-10 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200"
                 />
               </div>
             </div>
@@ -60,7 +72,7 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none"
                 >
                   Password
                 </label>
@@ -72,18 +84,18 @@ export default function LoginPage() {
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40" />
+                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
-                  className="flex h-11 w-full rounded-xl border border-input bg-background px-10 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
+                  className="flex h-11 w-full rounded-xl border border-input bg-background px-10 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -97,7 +109,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-70"
+              className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-70 active:scale-[0.98]"
             >
               {isLoading ? (
                 <>
@@ -105,21 +117,51 @@ export default function LoginPage() {
                   Logging in...
                 </>
               ) : (
-                "Log in to Portfolio"
+                "Log in to Dashboard"
               )}
             </button>
           </form>
+
+          <p className="text-center text-sm text-muted-foreground">
+            New here?{" "}
+            <Link
+              href="#"
+              className="font-semibold text-primary hover:underline underline-offset-4"
+            >
+              Contact support
+            </Link>{" "}
+            for access.
+          </p>
         </div>
 
-        <p className="text-center text-sm text-foreground/60">
-          Don't have an account?{" "}
-          <Link
-            href="#"
-            className="font-semibold text-primary hover:underline underline-offset-4"
-          >
-            Contact support
-          </Link>
-        </p>
+        <div className="text-center text-xs text-muted-foreground/60">
+          &copy; {new Date().getFullYear()} Lovissa Consulting Ltd. All rights reserved.
+        </div>
+      </div>
+
+      {/* Right Side: Abstract Hero */}
+      <div className="hidden md:flex flex-1 relative bg-muted overflow-hidden">
+        {/* Modern CSS Abstract Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary-rgb),0.1)_0%,transparent_50%)]" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,rgba(0,0,0,0.02)_25%,transparent_25%,transparent_50%,rgba(0,0,0,0.02)_50%,rgba(0,0,0,0.02)_75%,transparent_75%,transparent)] bg-[length:20px_20px]" />
+          {/* Using a nice abstract image from Unsplash as specified */}
+          <img
+            src="/bg-image.jpg"
+            alt="Abstract Business Background"
+            className="absolute inset-0 object-cover w-full h-full brightness-[0.8] saturate-[0.8] dark:brightness-[0.4]"
+          />
+        </div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-br from-primary/20 via-transparent to-background/40 backdrop-blur-[2px]" />
+
+        <div className="relative z-20 flex flex-col justify-center items-center h-full w-full p-12 text-center text-white dark:text-gray-100">
+          <div className="max-w-md space-y-4">
+            <h2 className="text-4xl font-extrabold tracking-tight drop-shadow-lg">Elevate Your Performance</h2>
+            <p className="text-lg font-medium opacity-90 drop-shadow-md">
+              Access real-time analytics, professional reports, and seamless event management in one place.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
