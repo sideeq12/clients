@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useActionState } from "react";
 import Link from "next/link";
 import { LogIn, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -9,32 +9,14 @@ import { login } from "./actions";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [state, formAction, isPending] = useActionState(login, null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage(null);
-
-    const formData = new FormData(e.target as HTMLFormElement);
-
-    // Original category tracking logic
+  // Capture category logic remains the same, but we can do it via a hidden input or in the action
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
     const category = formData.get("category");
     if (category) {
       localStorage.setItem("portal_category", category as string);
-    }
-
-    try {
-      const result = await login(formData);
-      if (result?.error) {
-        setErrorMessage(result.error);
-        setIsLoading(false);
-      }
-      // If successful, the server action will redirect to /dashboard
-    } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
-      setIsLoading(false);
     }
   };
 
@@ -65,10 +47,10 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {errorMessage && (
+          <form action={formAction} onSubmit={handleFormSubmit} className="space-y-6">
+            {state?.error && (
               <div className="p-3 text-sm font-bold text-orange-600 dark:text-orange-400 text-center bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
-                {errorMessage}
+                {state.error}
               </div>
             )}
             <div className="space-y-2">
@@ -157,10 +139,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isPending}
               className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-70 active:scale-[0.98]"
             >
-              {isLoading ? (
+              {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Logging in...
@@ -170,6 +152,7 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
 
           <p className="text-center text-sm text-muted-foreground">
             New here?{" "}
