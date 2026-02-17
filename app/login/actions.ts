@@ -5,18 +5,26 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
 export async function login(formData: FormData) {
-    const supabase = await createClient()
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    // type-casting here for convenience
-    // in practice, you should validate your inputs
-    const data = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
+    if (!supabaseUrl || !supabaseAnonKey) {
+        console.error('Supabase environment variables are missing!')
+        return { error: 'Server configuration error. Please contact support.' }
     }
 
-    const { error } = await supabase.auth.signInWithPassword(data)
+    const supabase = await createClient()
+
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    })
 
     if (error) {
+        console.error('Login error:', error.message)
         return { error: error.message }
     }
 
