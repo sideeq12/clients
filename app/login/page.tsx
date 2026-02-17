@@ -5,26 +5,37 @@ import Link from "next/link";
 import { LogIn, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/components/logo";
+import { login } from "./actions";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null);
 
-    // Capture category from form
     const formData = new FormData(e.target as HTMLFormElement);
+
+    // Original category tracking logic
     const category = formData.get("category");
     if (category) {
       localStorage.setItem("portal_category", category as string);
     }
 
-    // Simulate login
-    setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 1500);
+    try {
+      const result = await login(formData);
+      if (result?.error) {
+        setErrorMessage(result.error);
+        setIsLoading(false);
+      }
+      // If successful, the server action will redirect to /dashboard
+    } catch (error) {
+      setErrorMessage("An unexpected error occurred. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,6 +66,11 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {errorMessage && (
+              <div className="p-3 text-sm font-bold text-orange-600 dark:text-orange-400 text-center bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+                {errorMessage}
+              </div>
+            )}
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -66,6 +82,7 @@ export default function LoginPage() {
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="name@company.com"
                   required
@@ -93,6 +110,7 @@ export default function LoginPage() {
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
                 <input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
@@ -124,9 +142,10 @@ export default function LoginPage() {
                   id="category"
                   name="category"
                   required
+                  defaultValue=""
                   className="flex h-11 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 appearance-none"
                 >
-                  <option value="" disabled selected>Select category</option>
+                  <option value="" disabled>Select category</option>
                   <option value="law-firm">Law Firm</option>
                   <option value="accounting-firm">Accounting Firm</option>
                 </select>
