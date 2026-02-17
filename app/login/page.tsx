@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { LogIn, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { LogIn, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/components/logo";
 
@@ -13,6 +13,14 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Capture category from form
+    const formData = new FormData(e.target as HTMLFormElement);
+    const category = formData.get("category");
+    if (category) {
+      localStorage.setItem("portal_category", category as string);
+    }
+
     // Simulate login
     setTimeout(() => {
       window.location.href = "/dashboard";
@@ -101,6 +109,30 @@ export default function LoginPage() {
                     <Eye className="h-4 w-4" />
                   )}
                 </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="category"
+                className="text-sm font-medium leading-none"
+              >
+                Client Category
+              </label>
+              <div className="relative">
+                <select
+                  id="category"
+                  name="category"
+                  required
+                  className="flex h-11 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 appearance-none"
+                >
+                  <option value="" disabled selected>Select category</option>
+                  <option value="law-firm">Law Firm</option>
+                  <option value="accounting-firm">Accounting Firm</option>
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground/60">
+                  <ChevronDown className="h-4 w-4" />
+                </div>
               </div>
             </div>
 

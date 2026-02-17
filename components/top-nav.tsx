@@ -4,11 +4,14 @@ import React from "react";
 import { ThemeToggle } from "./theme-toggle";
 import { Bell, Search, User, Menu } from "lucide-react";
 
-export function TopNav() {
+export function TopNav({ onMenuClick }: { onMenuClick?: () => void }) {
     return (
         <header className="h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30 px-4 md:px-8 flex items-center justify-between">
             <div className="flex items-center gap-4 flex-1">
-                <button className="p-2 -ml-2 rounded-md md:hidden hover:bg-muted transition-colors">
+                <button
+                    onClick={onMenuClick}
+                    className="p-2 -ml-2 rounded-md md:hidden hover:bg-muted transition-colors"
+                >
                     <Menu className="h-5 w-5" />
                 </button>
                 <div className="hidden sm:flex items-center flex-1 max-w-md bg-muted/50 rounded-lg px-3 py-1.5 gap-2 border border-border/50 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
