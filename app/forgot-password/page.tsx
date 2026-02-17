@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Mail, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 export default function ForgotPasswordPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,11 @@ export default function ForgotPasswordPage() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
             <div className="w-full max-w-md space-y-8">
+                {/* Logo */}
+                <div className="flex justify-center mb-8">
+                    <Logo className="h-10 w-auto" />
+                </div>
+
                 {/* Header */}
                 <div className="text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground">

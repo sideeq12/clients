@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { LogIn, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Logo } from "@/components/logo";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,10 +33,7 @@ export default function LoginPage() {
       <div className="flex w-full flex-col justify-between p-8 md:w-1/2 lg:w-[40%] xl:w-[35%] relative z-10 md:bg-background">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary shadow-sm">
-              <LogIn className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold tracking-tight">Lovissa</span>
+            <Logo className="h-8 w-auto" />
           </div>
           <ThemeToggle />
         </div>
@@ -134,7 +132,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="text-center text-xs text-muted-foreground/60">
+        <div className="text-center text-xs text-muted-foreground/60 w-full mt-auto">
           &copy; {new Date().getFullYear()} Lovissa Consulting Ltd. All rights reserved.
         </div>
       </div>

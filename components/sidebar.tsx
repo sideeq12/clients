@@ -14,6 +14,7 @@ import {
     HelpCircle,
     Menu
 } from "lucide-react";
+import { Logo } from "./logo";
 
 const menuItems = [
     { name: "Overview", icon: LayoutDashboard, href: "/dashboard" },
@@ -31,9 +32,11 @@ export function Sidebar() {
             className={`hidden md:flex flex-col h-screen border-r border-border bg-card transition-all duration-300 relative ${isCollapsed ? "w-20" : "w-64"
                 }`}
         >
-            <div className="flex h-16 items-center px-6 border-b border-border">
-                {!isCollapsed && <span className="text-xl font-extrabold tracking-tight text-primary">Lovissa</span>}
-                {isCollapsed && <div className="h-8 w-8 bg-primary rounded flex items-center justify-center text-white font-bold text-xs uppercase">L</div>}
+            <div className={`flex h-16 items-center border-b border-border ${isCollapsed ? "justify-center" : "px-6"}`}>
+                <Logo
+                    className={isCollapsed ? "h-6 w-auto" : "h-7 w-auto"}
+                    collapsed={isCollapsed}
+                />
             </div>
 
             <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
@@ -44,8 +47,8 @@ export function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group ${isActive
-                                    ? "bg-primary text-primary-foreground shadow-sm"
-                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                 }`}
                         >
                             <item.icon className={`h-5 w-5 ${isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary"}`} />
