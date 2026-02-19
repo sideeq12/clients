@@ -36,7 +36,6 @@ const lawMenuItems = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { name: "Enquiries", icon: MessageSquare, href: "/dashboard/enquiries" },
     { name: "Cases", icon: Briefcase, href: "/dashboard/cases" },
-    { name: "Solicitors", icon: Users, href: "/dashboard/solicitors" },
     { name: "Deadlines", icon: Clock, href: "/dashboard/deadlines" },
     { name: "Documents", icon: Files, href: "/dashboard/documents" },
     { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
