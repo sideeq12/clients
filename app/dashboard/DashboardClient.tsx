@@ -29,7 +29,7 @@ import {
     Line,
     Legend,
 } from "recharts";
-import { Profile, Client, Enquiry, Deadline, Case } from "@/lib/supabase/data-service";
+import { Profile, Client, Enquiry, Deadline, Case } from "@/lib/supabase/types";
 
 interface DashboardClientProps {
     profile: Profile | null;

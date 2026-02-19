@@ -12,7 +12,7 @@ import {
     FolderPlus,
     ShieldCheck,
 } from "lucide-react";
-import { DocumentFolder, Document, Profile } from "@/lib/supabase/data-service";
+import { DocumentFolder, Document, Profile } from "@/lib/supabase/types";
 
 interface DocumentsClientProps {
     folders: DocumentFolder[];

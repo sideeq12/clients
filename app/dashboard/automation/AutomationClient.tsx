@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Activity, Play, Zap, Clock, Shield } from "lucide-react";
-import { AutomationWorkflow, AutomationActivity, Profile } from "@/lib/supabase/data-service";
+import { AutomationWorkflow, AutomationActivity, Profile } from "@/lib/supabase/types";
 
 interface AutomationClientProps {
     workflows: AutomationWorkflow[];

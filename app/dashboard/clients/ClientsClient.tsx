@@ -14,7 +14,7 @@ import {
     Shield,
     Briefcase,
 } from "lucide-react";
-import { Client, Profile } from "@/lib/supabase/data-service";
+import { Client, Profile } from "@/lib/supabase/types";
 
 interface ClientsClientProps {
     clients: Client[];

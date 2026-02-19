@@ -10,7 +10,7 @@ import {
     Clock,
     AlertCircle,
 } from "lucide-react";
-import { Enquiry, Profile } from "@/lib/supabase/data-service";
+import { Enquiry, Profile } from "@/lib/supabase/types";
 
 interface EnquiriesClientProps {
     enquiries: Enquiry[];

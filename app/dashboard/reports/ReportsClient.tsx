@@ -14,7 +14,7 @@ import {
     Clock,
     Shield,
 } from "lucide-react";
-import { Report, Profile } from "@/lib/supabase/data-service";
+import { Report, Profile } from "@/lib/supabase/types";
 
 interface ReportsClientProps {
     reports: Report[];

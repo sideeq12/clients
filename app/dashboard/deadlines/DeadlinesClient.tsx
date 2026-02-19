@@ -7,7 +7,7 @@ import {
     ArrowRight,
     Search,
 } from "lucide-react";
-import { Deadline, Profile } from "@/lib/supabase/data-service";
+import { Deadline, Profile } from "@/lib/supabase/types";
 
 interface DeadlinesClientProps {
     deadlines: Deadline[];

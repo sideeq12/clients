@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Briefcase, Search, Filter, Plus, Clock, AlertCircle, CheckCircle2 } from "lucide-react";
-import { Case, Profile } from "@/lib/supabase/data-service";
+import { Case, Profile } from "@/lib/supabase/types";
 
 interface CasesClientProps {
     cases: Case[];

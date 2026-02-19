@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Settings, User, Shield, CreditCard, Bell, Database } from "lucide-react";
-import { Profile, updateProfile } from "@/lib/supabase/data-service";
+import { Profile } from "@/lib/supabase/types";
+import { updateProfile } from "@/lib/supabase/data-service";
 import { useRouter } from "next/navigation";
 
 interface SettingsClientProps {
