@@ -47,6 +47,7 @@ export type Case = {
     case_type: string;
     solicitor: string;
     status: string;
+    stage: string;
     opened_date: string;
 };
 

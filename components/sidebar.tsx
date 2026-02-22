@@ -23,35 +23,17 @@ import {
 import { Logo } from "./logo";
 import { signOut } from "@/app/login/actions";
 
-const accountingMenuItems = [
-    { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-    { name: "Enquiries", icon: MessageSquare, href: "/dashboard/enquiries" },
-    { name: "Clients", icon: Users, href: "/dashboard/clients" },
-    { name: "Deadlines", icon: Clock, href: "/dashboard/deadlines" },
-    { name: "Documents", icon: Files, href: "/dashboard/documents" },
-    { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
-];
-
-const lawMenuItems = [
+const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { name: "Enquiries", icon: MessageSquare, href: "/dashboard/enquiries" },
     { name: "Cases", icon: Briefcase, href: "/dashboard/cases" },
-    { name: "Deadlines", icon: Clock, href: "/dashboard/deadlines" },
-    { name: "Documents", icon: Files, href: "/dashboard/documents" },
+    { name: "Appointments", icon: Users, href: "/dashboard/appointments" },
     { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
 ];
 
 export function Sidebar({ isMobileOpen, onClose }: { isMobileOpen?: boolean; onClose?: () => void }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = React.useState(false);
-    const [category, setCategory] = React.useState<string | null>(null);
-
-    React.useEffect(() => {
-        const stored = localStorage.getItem("portal_category");
-        setCategory(stored);
-    }, []);
-
-    const menuItems = category === "law-firm" ? lawMenuItems : accountingMenuItems;
 
     return (
         <>
