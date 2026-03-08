@@ -23,17 +23,19 @@ import {
 import { Logo } from "./logo";
 import { signOut } from "@/app/login/actions";
 
-const menuItems = [
-    { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-    { name: "Enquiries", icon: MessageSquare, href: "/dashboard/enquiries" },
-    { name: "Cases", icon: Briefcase, href: "/dashboard/cases" },
-    { name: "Appointments", icon: Users, href: "/dashboard/appointments" },
-    { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
-];
-
-export function Sidebar({ isMobileOpen, onClose }: { isMobileOpen?: boolean; onClose?: () => void }) {
+export function Sidebar({ isMobileOpen, onClose, category = 'accounting' }: { isMobileOpen?: boolean; onClose?: () => void; category?: 'accounting' | 'law-firm' }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+    const filteredMenuItems = React.useMemo(() => {
+        return [
+            { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+            { name: "Enquiries", icon: MessageSquare, href: "/dashboard/enquiries" },
+            { name: "Cases", icon: Briefcase, href: "/dashboard/cases" },
+            ...(category === 'accounting' ? [{ name: "Appointments", icon: Users, href: "/dashboard/appointments" }] : []),
+            { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
+        ];
+    }, [category]);
 
     return (
         <>
@@ -59,7 +61,7 @@ export function Sidebar({ isMobileOpen, onClose }: { isMobileOpen?: boolean; onC
                 </div>
 
                 <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-                    {menuItems.map((item) => {
+                    {filteredMenuItems.map((item) => {
                         const isActive = pathname === item.href;
                         return (
                             <Link

@@ -41,19 +41,26 @@ const IconMap: Record<string, any> = {
     Shield: Shield,
 };
 
-// Static mock data for recent reports history
-const recentReports = [
-    { id: 'REP-001', name: "Monthly Financial Summary", type: "Financial", date: "Today", generatedBy: "System", size: "2.4 MB" },
-    { id: 'REP-002', name: "Client Intake Performance", type: "Analytics", date: "Yesterday", generatedBy: "Admin", size: "1.1 MB" },
-    { id: 'REP-003', name: "Q3 Case Resolution Rate", type: "Performance", date: "Last Mon", generatedBy: "Admin", size: "3.8 MB" },
-    { id: 'REP-004', name: "Tax Filing Status Report", type: "Compliance", date: "Last Wed", generatedBy: "System", size: "1.5 MB" },
-    { id: 'REP-005', name: "Active Workflows Overview", type: "Analytics", date: "Last Thu", generatedBy: "System", size: "0.9 MB" },
-];
 
 export function ReportsClient({ reports, profile }: ReportsClientProps) {
     const category = profile?.category || "accounting";
 
-    // Generate trend data for the chart (Reports generated per day over the last 7 days)
+    // Mock reports that are category-aware
+    const recentReports = useMemo(() => {
+        const accountingReports = [
+            { id: 'REP-ACC-01', name: "Monthly VAT Summary", type: "Financial", date: "Today", generatedBy: "System", size: "2.4 MB" },
+            { id: 'REP-ACC-02', name: "Payroll Audit", type: "Audit", date: "Yesterday", generatedBy: "Admin", size: "1.1 MB" },
+            { id: 'REP-ACC-03', name: "Tax Advisory Notes", type: "Tax", date: "Last Mon", generatedBy: "Admin", size: "3.8 MB" },
+        ];
+        const lawReports = [
+            { id: 'REP-LAW-01', name: "Case Resolution Rate", type: "Performance", date: "Today", generatedBy: "System", size: "2.4 MB" },
+            { id: 'REP-LAW-02', name: "M&A Due Diligence Report", type: "Corporate", date: "Yesterday", generatedBy: "Admin", size: "1.1 MB" },
+            { id: 'REP-LAW-03', name: "Real Estate Compliance", type: "Property", date: "Last Mon", generatedBy: "Admin", size: "3.8 MB" },
+        ];
+        return category === 'law-firm' ? lawReports : accountingReports;
+    }, [category]);
+
+    // Generate trend data for the chart
     const chartData = useMemo(() => {
         const last7Days = [...Array(7)].map((_, i) => {
             const d = new Date();
@@ -125,7 +132,7 @@ export function ReportsClient({ reports, profile }: ReportsClientProps) {
                     </div>
                 </div>
                 <div className="h-[250px] w-full mt-4">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                         <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.4} />
                             <XAxis

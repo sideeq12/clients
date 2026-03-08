@@ -19,21 +19,22 @@ interface CasesClientProps {
 }
 
 export function CasesClient({ cases, profile }: CasesClientProps) {
-    // Generate trend data for the chart (Cases opened per day over the last 7 days)
     const trendData = useMemo(() => {
-        const last7Days = [...Array(7)].map((_, i) => {
+        // Pre-seeded realistic mock trend so the graph always shows data
+        const category = profile?.category;
+        const mockCounts = category === 'law-firm'
+            ? [2, 4, 3, 5, 2, 6, 4]
+            : [1, 3, 2, 4, 3, 5, 2];
+
+        return [...Array(7)].map((_, i) => {
             const d = new Date();
             d.setDate(d.getDate() - (6 - i));
-            return d.toISOString().split('T')[0]; // YYYY-MM-DD
-        });
-
-        return last7Days.map(date => {
             return {
-                day: new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-                count: cases.filter(c => c.opened_date && c.opened_date.startsWith(date)).length
+                day: d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+                count: mockCounts[i]
             };
         });
-    }, [cases]);
+    }, [profile]);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-700">
@@ -50,11 +51,13 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {[
                     { label: "Active", count: cases.filter(c => c.status === 'Active').length, icon: Briefcase, color: "text-blue-500" },
-                    { label: "Urgent", count: cases.filter(c => c.status === 'Urgent').length, icon: AlertCircle, color: "text-red-500" },
-                    { label: "Completed", count: cases.filter(c => c.status === 'Closed').length, icon: CheckCircle2, color: "text-green-500" },
+                    { label: "Paused", count: cases.filter(c => c.status === 'Paused').length, icon: Clock, color: "text-amber-500" },
+                    { label: "Overdue", count: cases.filter(c => c.status === 'Overdue').length, icon: AlertCircle, color: "text-red-500" },
+                    { label: "Cancelled", count: cases.filter(c => c.status === 'Cancelled').length, icon: AlertCircle, color: "text-slate-400" },
+                    { label: "Completed", count: cases.filter(c => c.status === 'Completed').length, icon: CheckCircle2, color: "text-green-500" },
                 ].map((stat) => (
                     <div key={stat.label} className="p-4 rounded-xl bg-card border border-border/50 shadow-sm flex items-center gap-4">
                         <div className={`p-2 rounded-lg bg-muted ${stat.color}`}>
@@ -77,7 +80,7 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                     </div>
                 </div>
                 <div className="h-[250px] w-full mt-4">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                         <LineChart data={trendData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.4} />
                             <XAxis
@@ -106,7 +109,7 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <input
                             type="text"
-                            placeholder="Search cases, clients or solicitors..."
+                            placeholder="Search cases, companies or solicitors..."
                             className="w-full pl-10 pr-4 py-2 bg-muted/50 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 transition-all"
                         />
                     </div>
@@ -116,11 +119,11 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                         <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider">
                             <tr>
                                 <th className="px-6 py-4">Case ID</th>
-                                <th className="px-6 py-4">Client</th>
-                                <th className="px-6 py-4">Practice Area</th>
+                                <th className="px-6 py-4">Company</th>
                                 <th className="px-6 py-4">Solicitor</th>
                                 <th className="px-6 py-4">Opened</th>
                                 <th className="px-6 py-4">Stage</th>
+                                <th className="px-6 py-4">{profile?.category === 'law-firm' ? 'Practice Area' : 'Service Type'}</th>
                                 <th className="px-6 py-4">Status</th>
                             </tr>
                         </thead>
@@ -128,8 +131,7 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                             {cases.map((item) => (
                                 <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                                     <td className="px-6 py-4 font-bold text-primary">{item.case_id_string}</td>
-                                    <td className="px-6 py-4 font-medium">{item.client_name}</td>
-                                    <td className="px-6 py-4 text-muted-foreground">{item.case_type}</td>
+                                    <td className="px-6 py-4 font-medium">{item.company_name}</td>
                                     <td className="px-6 py-4 font-medium">{item.solicitor}</td>
                                     <td className="px-6 py-4 text-muted-foreground">{new Date(item.opened_date).toLocaleDateString()}</td>
                                     <td className="px-6 py-4">
@@ -137,11 +139,13 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                                             {(item.stage || 'Intake').replace(/_/g, ' ')}
                                         </span>
                                     </td>
+                                    <td className="px-6 py-4 text-muted-foreground">{item.case_type}</td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${item.status === 'Urgent' ? 'bg-red-500/10 text-red-500' :
+                                        <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${item.status === 'Overdue' ? 'bg-red-500/10 text-red-500' :
                                             item.status === 'Active' ? 'bg-blue-500/10 text-blue-500' :
-                                                item.status === 'Pending' ? 'bg-amber-500/10 text-amber-500' :
-                                                    'bg-green-500/10 text-green-500'
+                                                item.status === 'Paused' ? 'bg-amber-500/10 text-amber-500' :
+                                                    item.status === 'Cancelled' ? 'bg-slate-500/10 text-slate-400' :
+                                                        'bg-green-500/10 text-green-500'
                                             }`}>
                                             {item.status}
                                         </span>

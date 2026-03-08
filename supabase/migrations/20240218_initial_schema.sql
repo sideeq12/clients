@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 );
 
 -- Create clients table
-CREATE TABLE IF NOT EXISTS public.clients (
+CREATE TABLE IF NOT EXISTS public.company (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
     name TEXT NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.cases (
 
 -- Set up Row Level Security (RLS)
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.company ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.deadlines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cases ENABLE ROW LEVEL SECURITY;
@@ -74,9 +74,9 @@ ALTER TABLE public.cases ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view their own profile." ON public.profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can update their own profile." ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Users can view their own clients." ON public.clients FOR SELECT USING (profile_id = auth.uid());
-CREATE POLICY "Users can insert their own clients." ON public.clients FOR INSERT WITH CHECK (profile_id = auth.uid());
-CREATE POLICY "Users can update their own clients." ON public.clients FOR UPDATE USING (profile_id = auth.uid());
+CREATE POLICY "Users can view their own clients." ON public.company FOR SELECT USING (profile_id = auth.uid());
+CREATE POLICY "Users can insert their own clients." ON public.company FOR INSERT WITH CHECK (profile_id = auth.uid());
+CREATE POLICY "Users can update their own clients." ON public.company FOR UPDATE USING (profile_id = auth.uid());
 
 CREATE POLICY "Users can view their own enquiries." ON public.enquiries FOR SELECT USING (profile_id = auth.uid());
 CREATE POLICY "Users can insert their own enquiries." ON public.enquiries FOR INSERT WITH CHECK (profile_id = auth.uid());

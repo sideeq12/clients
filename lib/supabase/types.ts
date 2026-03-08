@@ -9,7 +9,7 @@ export type Profile = {
     address: string;
 };
 
-export type Client = {
+export type Company = {
     id: string;
     name: string;
     contact_person: string;
@@ -22,7 +22,7 @@ export type Client = {
 
 export type Enquiry = {
     id: string;
-    client_name: string;
+    company_name: string;
     service_name: string;
     status: string;
     priority: string;
@@ -33,22 +33,37 @@ export type Enquiry = {
 export type Deadline = {
     id: string;
     task: string;
-    client_name: string;
+    company_name: string;
     type: string;
     due_date: string;
     priority: string;
     status: string;
+    escalated?: boolean;
+    assigned_staff_id?: string;
 };
 
 export type Case = {
     id: string;
     case_id_string: string;
-    client_name: string;
+    company_name: string;
     case_type: string;
     solicitor: string;
     status: string;
     stage: string;
     opened_date: string;
+    assigned_staff_id?: string;
+};
+
+export type Staff = {
+    id: string;
+    profile_id: string;
+    full_name: string;
+    email: string;
+    phone: string;
+    role: string;
+    department: string;
+    status: string;
+    created_at: string;
 };
 
 export interface AutomationWorkflow {
@@ -85,7 +100,7 @@ export interface Document {
     name: string;
     file_type: string;
     file_size: string;
-    client_name: string;
+    company_name: string;
     storage_path: string | null;
     created_at: string;
 }

@@ -1,7 +1,7 @@
 import { DashboardClient } from "./DashboardClient";
 import {
     getProfile,
-    getClients,
+    getCompanies,
     getEnquiries,
     getDeadlines,
     getCases,
@@ -10,23 +10,23 @@ import {
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-    // If no profile exists, the user might need to complete onboarding or it's a new account
-    // For now, we'll allow it and show an empty state or default to accounting
+    // Fetch profile first so we can pass category into stats computation
+    const profile = await getProfile();
+    const category = profile?.category ?? 'accounting';
 
-    // Fetch all relevant data concurrently
-    const [profile, clients, enquiries, deadlines, cases, stats] = await Promise.all([
-        getProfile(),
-        getClients(),
+    // Fetch all remaining data concurrently
+    const [companies, enquiries, deadlines, cases, stats] = await Promise.all([
+        getCompanies(),
         getEnquiries(),
         getDeadlines(),
         getCases(),
-        getDashboardStats(),
+        getDashboardStats(category),
     ]);
 
     return (
         <DashboardClient
             profile={profile}
-            clients={clients}
+            companies={companies}
             enquiries={enquiries}
             deadlines={deadlines}
             cases={cases}

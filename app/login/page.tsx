@@ -11,14 +11,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, formAction, isPending] = useActionState(login, null);
 
-  // Capture category logic remains the same, but we can do it via a hidden input or in the action
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget);
-    const category = formData.get("category");
-    if (category) {
-      localStorage.setItem("portal_category", category as string);
-    }
-  };
 
   return (
     <div className="flex min-h-screen relative bg-background text-foreground font-sans overflow-hidden">
@@ -47,7 +39,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form action={formAction} onSubmit={handleFormSubmit} className="space-y-6">
+          <form action={formAction} className="space-y-6">
             {state?.error && (
               <div className="p-3 text-sm font-bold text-orange-600 dark:text-orange-400 text-center bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
                 {state.error}
@@ -112,30 +104,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="category"
-                className="text-sm font-medium leading-none"
-              >
-                Client Category
-              </label>
-              <div className="relative">
-                <select
-                  id="category"
-                  name="category"
-                  required
-                  defaultValue=""
-                  className="flex h-11 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all duration-200 appearance-none"
-                >
-                  <option value="" disabled>Select category</option>
-                  <option value="law-firm">Law Firm</option>
-                  <option value="accounting-firm">Accounting Firm</option>
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground/60">
-                  <ChevronDown className="h-4 w-4" />
-                </div>
-              </div>
-            </div>
 
             <button
               type="submit"

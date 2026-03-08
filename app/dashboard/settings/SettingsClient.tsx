@@ -96,8 +96,42 @@ export function SettingsClient({ profile }: SettingsClientProps) {
                                     {formData.address || "Not set"}
                                 </div>
                             </div>
+
+                            {/* Firm Type Selector */}
+                            <div className="md:col-span-2 space-y-2">
+                                <label className="text-xs font-bold uppercase text-muted-foreground">Firm Type</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[
+                                        { value: "law-firm", label: "⚖️ Law Firm", desc: "Cases, practice areas & legal workflows" },
+                                        { value: "accounting", label: "📊 Accounting Firm", desc: "Services, VAT, payroll & tax workflows" },
+                                    ].map((opt) => (
+                                        <button
+                                            key={opt.value}
+                                            onClick={() => setFormData(prev => ({ ...prev, category: opt.value as 'law-firm' | 'accounting' }))}
+                                            className={`text-left p-3 rounded-xl border-2 transition-all ${formData.category === opt.value
+                                                    ? "border-primary bg-primary/5 text-foreground"
+                                                    : "border-border/50 bg-muted/20 text-muted-foreground hover:border-border"
+                                                }`}
+                                        >
+                                            <p className="text-sm font-bold">{opt.label}</p>
+                                            <p className="text-xs mt-0.5 opacity-70">{opt.desc}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={handleSave}
+                                disabled={isSaving}
+                                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+                            >
+                                {isSaving ? "Saving..." : "Save Changes"}
+                            </button>
                         </div>
                     </section>
+
 
                     <section className="space-y-4">
                         <h3 className="font-bold border-b border-border/50 pb-2">Compliance & Data</h3>

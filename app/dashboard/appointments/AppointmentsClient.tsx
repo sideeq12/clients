@@ -103,7 +103,7 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                     </div>
                 </div>
                 <div className="h-[250px] w-full mt-4">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                         <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.4} />
                             <XAxis

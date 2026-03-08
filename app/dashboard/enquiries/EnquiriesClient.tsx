@@ -25,7 +25,7 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">
-                        {category === "law-firm" ? "Legal Enquiries" : "Client Enquiries"}
+                        {category === "law-firm" ? "Legal Enquiries" : "Company Enquiries"}
                     </h1>
                     <p className="text-muted-foreground text-sm mt-1">Manage and track all incoming service requests for {profile?.company_name || 'your firm'}.</p>
                 </div>
@@ -61,7 +61,7 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <input
                             type="text"
-                            placeholder="Search enquiries, clients, or services..."
+                            placeholder="Search enquiries, companies, or services..."
                             className="w-full pl-10 pr-4 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                         />
                     </div>
@@ -70,7 +70,7 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
                     <table className="w-full text-left text-sm border-collapse">
                         <thead>
                             <tr className="text-muted-foreground font-medium border-b border-border/50 bg-muted/10">
-                                <th className="py-3 px-4">Client</th>
+                                <th className="py-3 px-4">Company</th>
                                 <th className="py-3 px-4">
                                     {category === "law-firm" ? "Practice Area" : "Service"}
                                 </th>
@@ -84,7 +84,7 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
                             {enquiries.map((enq) => (
                                 <tr key={enq.id} className="hover:bg-muted/30 transition-colors">
                                     <td className="py-4 px-4">
-                                        <div className="font-semibold">{enq.client_name}</div>
+                                        <div className="font-semibold">{enq.company_name}</div>
                                         <div className="text-[10px] text-muted-foreground">{enq.source}</div>
                                     </td>
                                     <td className="py-4 px-4 text-muted-foreground">{enq.service_name}</td>

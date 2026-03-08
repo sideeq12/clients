@@ -6,7 +6,7 @@ INSERT INTO public.profiles (id, category, full_name, company_name, email, phone
 VALUES ('5cf8e797-8804-4e54-9ee8-5c281cfe3630', 'accounting', 'John Doe', 'Acme Accounting Ltd', 'john@acme.com', '+44 123 456 789', 'London, UK', '123 Finance St, London');
 
 -- 2. Seed Clients
-INSERT INTO public.clients (profile_id, name, contact_person, email, phone, services, status, health)
+INSERT INTO public.company (profile_id, name, contact_person, email, phone, services, status, health)
 VALUES 
 ('5cf8e797-8804-4e54-9ee8-5c281cfe3630', 'Acme Corp Ltd', 'John Smith', 'john@acmecorp.com', '+44 20 7123 4567', ARRAY['VAT', 'Payroll', 'Corp Tax'], 'Active', 'Good'),
 ('5cf8e797-8804-4e54-9ee8-5c281cfe3630', 'Global Tech Solutions', 'Sarah Williams', 'sarah@globaltech.io', '+44 20 8234 5678', ARRAY['Bookkeeping', 'Self Assessment'], 'Active', 'Warning');
