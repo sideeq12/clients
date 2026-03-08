@@ -1,0 +1,24 @@
+
+> clientpage@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local, .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.1s
+  Running TypeScript ...
+Failed to compile.
+
+./app/dashboard/documents/DocumentsClient.tsx:104:90
+Type error: Property 'client_name' does not exist on type 'Document'.
+
+[0m [90m 102 |[39m                                         [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 103 |[39m                                     [33m<[39m[33m/[39m[33mtd[39m[33m>[39m
+[31m[1m>[22m[39m[90m 104 |[39m                                     [33m<[39m[33mtd[39m className[33m=[39m[32m"py-3 px-4 text-muted-foreground"[39m[33m>[39m{doc[33m.[39mclient_name}[33m<[39m[33m/[39m[33mtd[39m[33m>[39m
+ [90m     |[39m                                                                                          [31m[1m^[22m[39m
+ [90m 105 |[39m                                     [33m<[39m[33mtd[39m className[33m=[39m[32m"py-3 px-4 text-muted-foreground"[39m[33m>[39m{doc[33m.[39mfile_size}[33m<[39m[33m/[39m[33mtd[39m[33m>[39m
+ [90m 106 |[39m                                     [33m<[39m[33mtd[39m className[33m=[39m[32m"py-3 px-4 text-muted-foreground"[39m[33m>[39m{[36mnew[39m [33mDate[39m(doc[33m.[39mcreated_at)[33m.[39mtoLocaleDateString()}[33m<[39m[33m/[39m[33mtd[39m[33m>[39m
+ [90m 107 |[39m                                     [33m<[39m[33mtd[39m className[33m=[39m[32m"py-3 px-4 text-right"[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

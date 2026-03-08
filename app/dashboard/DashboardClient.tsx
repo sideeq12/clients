@@ -32,10 +32,10 @@ interface DashboardClientProps {
     deadlines: Deadline[];
     cases: Case[];
     stats: {
-        serviceDistribution: any[];
-        enquiriesTrend: any[];
+        serviceDistribution: { name: string; value: number; color: string }[];
+        enquiriesTrend: { day: string; count: number }[];
         caseStageCounts: Record<string, number>;
-        practiceAreas: any[];
+        practiceAreas: { name: string; value: number; color: string }[];
     };
 }
 

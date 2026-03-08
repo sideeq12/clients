@@ -32,7 +32,7 @@ interface ReportsClientProps {
     profile: Profile | null;
 }
 
-const IconMap: Record<string, any> = {
+const IconMap: Record<string, React.ElementType> = {
     BarChart3: BarChart3,
     PieChart: PieChart,
     TrendingUp: TrendingUp,

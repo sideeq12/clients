@@ -101,7 +101,7 @@ export function DocumentsClient({ folders, documents, profile }: DocumentsClient
                                             <span className="font-medium">{doc.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-4 text-muted-foreground">{doc.client_name}</td>
+                                    <td className="py-3 px-4 text-muted-foreground">{doc.company_name}</td>
                                     <td className="py-3 px-4 text-muted-foreground">{doc.file_size}</td>
                                     <td className="py-3 px-4 text-muted-foreground">{new Date(doc.created_at).toLocaleDateString()}</td>
                                     <td className="py-3 px-4 text-right">

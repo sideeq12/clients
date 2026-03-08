@@ -80,7 +80,7 @@ export function DeadlinesClient({ deadlines, profile }: DeadlinesClientProps) {
                                             )}
                                         </h4>
                                         <div className="flex items-center gap-2">
-                                            <p className="text-xs text-muted-foreground">{dl.client_name}</p>
+                                            <p className="text-xs text-muted-foreground">{dl.company_name}</p>
                                             <span className="text-[10px] text-muted-foreground/50 px-1 rounded bg-muted/50 border border-border/50">{dl.type}</span>
                                         </div>
                                     </div>

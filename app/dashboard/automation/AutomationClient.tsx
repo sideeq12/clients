@@ -10,7 +10,7 @@ interface AutomationClientProps {
     profile: Profile | null;
 }
 
-const IconMap: Record<string, any> = {
+const IconMap: Record<string, React.ElementType> = {
     Zap: Zap,
     Play: Play,
     Shield: Shield,

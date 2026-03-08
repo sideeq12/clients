@@ -14,10 +14,10 @@ import {
     Shield,
     Briefcase,
 } from "lucide-react";
-import { Client, Profile } from "@/lib/supabase/types";
+import { Company, Profile } from "@/lib/supabase/types";
 
 interface ClientsClientProps {
-    clients: Client[];
+    clients: Company[];
     profile: Profile | null;
 }
 
