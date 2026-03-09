@@ -32,7 +32,7 @@ export function Sidebar({ isMobileOpen, onClose, category = 'accounting' }: { is
             { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
             { name: "Enquiries", icon: MessageSquare, href: "/dashboard/enquiries" },
             { name: "Cases", icon: Briefcase, href: "/dashboard/cases" },
-            ...(category === 'accounting' ? [{ name: "Appointments", icon: Users, href: "/dashboard/appointments" }] : []),
+            { name: "Appointments", icon: Users, href: "/dashboard/appointments" },
             { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
         ];
     }, [category]);

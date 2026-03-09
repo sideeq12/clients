@@ -23,6 +23,7 @@ export type Company = {
 export type Enquiry = {
     id: string;
     company_name: string;
+    client_name?: string;
     service_name: string;
     status: string;
     priority: string;
@@ -34,6 +35,7 @@ export type Deadline = {
     id: string;
     task: string;
     company_name: string;
+    client_name?: string;
     type: string;
     due_date: string;
     priority: string;
@@ -46,6 +48,7 @@ export type Case = {
     id: string;
     case_id_string: string;
     company_name: string;
+    client_name?: string;
     case_type: string;
     solicitor: string;
     status: string;
@@ -114,5 +117,14 @@ export interface Report {
     icon_name: string;
     color: string;
     count: number;
+    created_at: string;
+}
+
+export interface PracticeArea {
+    id: string;
+    profile_id: string;
+    name: string;
+    category: 'accounting' | 'law-firm';
+    description: string | null;
     created_at: string;
 }

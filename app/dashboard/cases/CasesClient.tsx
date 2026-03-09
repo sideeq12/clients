@@ -131,7 +131,7 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                             {cases.map((item) => (
                                 <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                                     <td className="px-6 py-4 font-bold text-primary">{item.case_id_string}</td>
-                                    <td className="px-6 py-4 font-medium">{item.company_name}</td>
+                                    <td className="px-6 py-4 font-medium">{item.client_name || item.company_name}</td>
                                     <td className="px-6 py-4 font-medium">{item.solicitor}</td>
                                     <td className="px-6 py-4 text-muted-foreground">{new Date(item.opened_date).toLocaleDateString()}</td>
                                     <td className="px-6 py-4">

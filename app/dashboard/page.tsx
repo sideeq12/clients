@@ -6,6 +6,7 @@ import {
     getDeadlines,
     getCases,
     getDashboardStats,
+    getStaff,
 } from "@/lib/supabase/data-service";
 import { redirect } from "next/navigation";
 
@@ -15,12 +16,13 @@ export default async function DashboardPage() {
     const category = profile?.category ?? 'accounting';
 
     // Fetch all remaining data concurrently
-    const [companies, enquiries, deadlines, cases, stats] = await Promise.all([
+    const [companies, enquiries, deadlines, cases, stats, staff] = await Promise.all([
         getCompanies(),
         getEnquiries(),
         getDeadlines(),
         getCases(),
         getDashboardStats(category),
+        getStaff(),
     ]);
 
     return (
@@ -31,6 +33,7 @@ export default async function DashboardPage() {
             deadlines={deadlines}
             cases={cases}
             stats={stats}
+            staff={staff}
         />
     );
 }

@@ -12,7 +12,8 @@ import {
     AutomationActivity,
     DocumentFolder,
     Document,
-    Report
+    Report,
+    PracticeArea
 } from './types';
 
 // Mock Data Definitions
@@ -87,9 +88,9 @@ const MOCK_CASES: Record<string, Case[]> = {
     'law-firm': [
         { id: 'lc1', case_id_string: 'LF-2024-001', company_name: 'Global Logistics', case_type: 'Merger & Acquisition', solicitor: 'Marcus Thorne', status: 'Active', stage: 'Due Diligence', opened_date: '2024-01-15' },
         { id: 'lc2', case_id_string: 'LF-2024-002', company_name: 'Heritage Homes', case_type: 'Property Conveyancing', solicitor: 'Jane Doe', status: 'Active', stage: 'Exchange Contracts', opened_date: '2024-02-01' },
-        { id: 'lc3', case_id_string: 'LF-2024-003', company_name: 'Swift Solutions', case_type: 'Employment Dispute', solicitor: 'Marcus Thorne', status: 'Overdue', stage: 'Tribunal Prep', opened_date: '2024-02-10' },
+        { id: 'lc3', case_id_string: 'LF-2024-003', company_name: 'Swift Solutions', case_type: 'Employment Dispute', solicitor: 'Marcus Thorne', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-10' },
         { id: 'lc4', case_id_string: 'LF-2024-004', company_name: 'Urban Dev Group', case_type: 'Planning Appeal', solicitor: 'Rachel Green', status: 'Paused', stage: 'Discovery', opened_date: '2024-02-14' },
-        { id: 'lc5', case_id_string: 'LF-2024-005', company_name: 'Family Estate', case_type: 'Probate & Wills', solicitor: 'Rachel Green', status: 'Active', stage: 'Awaiting Grant', opened_date: '2024-02-20' },
+        { id: 'lc5', case_id_string: 'LF-2024-005', company_name: 'Family Estate', case_type: 'Probate & Wills', solicitor: 'Rachel Green', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-20' },
         { id: 'lc6', case_id_string: 'LF-2024-006', company_name: 'Midtown Retail', case_type: 'Commercial Lease', solicitor: 'Jane Doe', status: 'Active', stage: 'Negotiation', opened_date: '2024-02-22' },
         { id: 'lc7', case_id_string: 'LF-2023-089', company_name: 'Apex Corp', case_type: 'Litigation', solicitor: 'Marcus Thorne', status: 'Completed', stage: 'Settled', opened_date: '2023-10-05' },
         { id: 'lc8', case_id_string: 'LF-2024-007', company_name: 'Riverstone Group', case_type: 'Corporate Restructuring', solicitor: 'Jane Doe', status: 'Cancelled', stage: 'N/A', opened_date: '2024-01-30' },
@@ -186,36 +187,73 @@ export async function getCases() {
 }
 
 export async function getDashboardStats(category: 'accounting' | 'law-firm' = 'accounting') {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     const companies = await getCompanies();
     const enquiries = await getEnquiries();
     const cases = await getCases();
 
-    // Enquiry Trends (last 7 days - simplified mock)
+    // Enquiry Trends (last 7 days - real data)
     const enquiriesTrend = [...Array(7)].map((_, i) => {
         const d = new Date();
+        d.setHours(0, 0, 0, 0);
         d.setDate(d.getDate() - (6 - i));
+
+        const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+
+        // Filter enquiries for this specific day
+        const dayEnquiries = enquiries.filter(enq => {
+            const enqDate = new Date(enq.created_at);
+            return enqDate.getDate() === d.getDate() &&
+                enqDate.getMonth() === d.getMonth() &&
+                enqDate.getFullYear() === d.getFullYear();
+        });
+
         return {
-            day: d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-            count: Math.floor(Math.random() * 5) + 2
+            day: dateStr,
+            count: dayEnquiries.length,
+            items: dayEnquiries.map(enq => ({
+                id: enq.id,
+                title: `${enq.client_name || enq.company_name} - ${enq.service_name}`
+            }))
         };
     });
 
-    // Practice Areas / Service Categories
+    // Practice Areas / Service Categories - Fetch from DB
     let practiceAreas: { name: string; value: number; color: string }[] = [];
-    if (category === 'law-firm') {
-        practiceAreas = [
-            { name: 'Corporate', value: 45, color: PALETTE[0] },
-            { name: 'Property', value: 30, color: PALETTE[1] },
-            { name: 'Employment', value: 15, color: PALETTE[2] },
-            { name: 'Other', value: 10, color: PALETTE[3] }
-        ];
-    } else {
-        practiceAreas = [
-            { name: 'VAT Services', value: 40, color: PALETTE[0] },
-            { name: 'Payroll', value: 25, color: PALETTE[1] },
-            { name: 'Tax Advisory', value: 20, color: PALETTE[2] },
-            { name: 'Audit', value: 15, color: PALETTE[3] }
-        ];
+
+    if (user) {
+        const { data: dbPracticeAreas } = await supabase
+            .from('practice_areas')
+            .select('*')
+            .eq('profile_id', user.id);
+
+        if (dbPracticeAreas && dbPracticeAreas.length > 0) {
+            practiceAreas = dbPracticeAreas.map((pa: PracticeArea, index: number) => ({
+                name: pa.name,
+                // Assign a mock value for the chart since we don't have real cases tied to these yet
+                value: Math.floor(Math.random() * 40) + 10,
+                color: PALETTE[index % PALETTE.length]
+            }));
+        } else {
+            // Fallback to mock data if no practice areas are found in DB for the user
+            if (category === 'law-firm') {
+                practiceAreas = [
+                    { name: 'Corporate', value: 45, color: PALETTE[0] },
+                    { name: 'Property', value: 30, color: PALETTE[1] },
+                    { name: 'Employment', value: 15, color: PALETTE[2] },
+                    { name: 'Other', value: 10, color: PALETTE[3] }
+                ];
+            } else {
+                practiceAreas = [
+                    { name: 'VAT Services', value: 40, color: PALETTE[0] },
+                    { name: 'Payroll', value: 25, color: PALETTE[1] },
+                    { name: 'Tax Advisory', value: 20, color: PALETTE[2] },
+                    { name: 'Audit', value: 15, color: PALETTE[3] }
+                ];
+            }
+        }
     }
 
     return {
@@ -223,6 +261,31 @@ export async function getDashboardStats(category: 'accounting' | 'law-firm' = 'a
         enquiriesTrend,
         caseStageCounts: {},
         practiceAreas,
+        casesTrend: [...Array(7)].map((_, i) => {
+            const d = new Date();
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() - (6 - i));
+
+            const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+
+            const dayCases = cases.filter(c => {
+                const cDate = new Date(c.opened_date);
+                return cDate.getDate() === d.getDate() &&
+                    cDate.getMonth() === d.getMonth() &&
+                    cDate.getFullYear() === d.getFullYear();
+            });
+
+            return {
+                day: dateStr,
+                count: dayCases.length,
+                items: dayCases.map(c => ({
+                    id: c.id,
+                    title: `${c.client_name || c.company_name} - ${c.case_type}`,
+                    solicitor: c.solicitor,
+                    stage: c.stage
+                }))
+            };
+        })
     };
 }
 

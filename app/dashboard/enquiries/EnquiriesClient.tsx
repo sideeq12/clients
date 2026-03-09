@@ -84,7 +84,7 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
                             {enquiries.map((enq) => (
                                 <tr key={enq.id} className="hover:bg-muted/30 transition-colors">
                                     <td className="py-4 px-4">
-                                        <div className="font-semibold">{enq.company_name}</div>
+                                        <div className="font-semibold">{enq.client_name || enq.company_name}</div>
                                         <div className="text-[10px] text-muted-foreground">{enq.source}</div>
                                     </td>
                                     <td className="py-4 px-4 text-muted-foreground">{enq.service_name}</td>
