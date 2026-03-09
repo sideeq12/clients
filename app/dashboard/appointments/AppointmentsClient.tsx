@@ -11,22 +11,14 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { Profile } from "@/lib/supabase/types";
+import { Profile, Appointment } from "@/lib/supabase/types";
 
 interface AppointmentsClientProps {
     profile: Profile | null;
+    appointments: Appointment[];
 }
 
-// Static mock data for intakes and appointments workflow
-const workflowData = [
-    { id: 'INT-001', client: "Acme Corp", type: "Initial Consultation", date: "Today, 2:00 PM", status: "Upcoming", method: "Video Call", contact: "Jane Doe" },
-    { id: 'INT-002', client: "Smith LLC", type: "Document Review", date: "Tomorrow, 10:30 AM", status: "Awaiting Documents", method: "Phone Call", contact: "John Smith" },
-    { id: 'INT-003', client: "Beta Tech", type: "Case Strategy Follow-up", date: "Next Mon, 1:00 PM", status: "Scheduled", method: "In-Person", contact: "Jane Doe" },
-    { id: 'INT-004', client: "Echo Innovations", type: "Onboarding Intake", date: "Last Tue", status: "Completed", method: "Video Call", contact: "Mark Roberts" },
-    { id: 'INT-005', client: "Global Industries", type: "Discovery Call", date: "Last Wed", status: "Action Required", method: "Phone Call", contact: "Sarah Jenkins" },
-];
-
-export function AppointmentsClient({ profile }: AppointmentsClientProps) {
+export function AppointmentsClient({ profile, appointments }: AppointmentsClientProps) {
     const category = profile?.category || 'accounting';
 
     // Generate trend data for the chart (Intakes per day over the last 7 days)
@@ -37,17 +29,19 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
             return d.toISOString().split('T')[0]; // YYYY-MM-DD
         });
 
-        // Since our static data doesn't have real parsable dates, we'll mock a realistic trend line
-        // to show how this would look with dynamic data.
-        const mockTrend = [2, 5, 3, 6, 4, 7, 5];
+        const countsByDay = appointments.reduce((acc, app) => {
+            const day = new Date(app.appointment_date).toISOString().split('T')[0];
+            acc[day] = (acc[day] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
 
-        return last7Days.map((date, index) => {
+        return last7Days.map((date) => {
             return {
                 day: new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-                count: mockTrend[index]
+                count: countsByDay[date] || 0
             };
         });
-    }, []);
+    }, [appointments]);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-700">
@@ -57,7 +51,6 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                     <h1 className="text-2xl font-bold tracking-tight">Intakes & Appointments</h1>
                     <p className="text-muted-foreground text-sm mt-1">Read-only view of your active {category === 'law-firm' ? 'legal intakes' : 'client onboarding workflows'} and upcoming meetings.</p>
                 </div>
-                {/* No action buttons: Read-Only page */}
             </div>
 
             {/* Workflow KPIs */}
@@ -68,7 +61,7 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                     </div>
                     <div>
                         <p className="text-xs font-medium text-muted-foreground uppercase">Upcoming</p>
-                        <h3 className="text-xl font-bold">{workflowData.filter(d => d.status === 'Upcoming' || d.status === 'Scheduled').length}</h3>
+                        <h3 className="text-xl font-bold">{appointments.filter(d => d.status === 'Upcoming' || d.status === 'Scheduled').length}</h3>
                     </div>
                 </div>
                 <div className="p-4 rounded-xl bg-card border border-border/50 shadow-sm flex items-center gap-4">
@@ -77,7 +70,7 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                     </div>
                     <div>
                         <p className="text-xs font-medium text-muted-foreground uppercase">Action Required</p>
-                        <h3 className="text-xl font-bold">{workflowData.filter(d => d.status === 'Action Required' || d.status === 'Awaiting Documents').length}</h3>
+                        <h3 className="text-xl font-bold">{appointments.filter(d => d.status === 'Action Required' || d.status === 'Awaiting Documents').length}</h3>
                     </div>
                 </div>
                 <div className="p-4 rounded-xl bg-card border border-border/50 shadow-sm flex items-center gap-4">
@@ -86,7 +79,7 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                     </div>
                     <div>
                         <p className="text-xs font-medium text-muted-foreground uppercase">Completed (30d)</p>
-                        <h3 className="text-xl font-bold">{workflowData.filter(d => d.status === 'Completed').length}</h3>
+                        <h3 className="text-xl font-bold">{appointments.filter(d => d.status === 'Completed').length}</h3>
                     </div>
                 </div>
             </div>
@@ -139,30 +132,27 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider">
                             <tr>
-                                <th className="px-6 py-4">ID</th>
                                 <th className="px-6 py-4">Client</th>
                                 <th className="px-6 py-4">Workflow Step</th>
                                 <th className="px-6 py-4">Date / Time</th>
-                                <th className="px-6 py-4">Method</th>
+                                <th className="px-6 py-4">Contact</th>
                                 <th className="px-6 py-4">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border/50 text-muted-foreground">
-                            {workflowData.map((flow) => (
+                            {appointments.map((flow) => (
                                 <tr key={flow.id} className="hover:bg-muted/20 transition-colors">
-                                    <td className="px-6 py-4 font-bold text-foreground/80">{flow.id}</td>
-                                    <td className="px-6 py-4 font-medium text-foreground">{flow.client}</td>
+                                    <td className="px-6 py-4 font-medium text-foreground">{flow.client_name}</td>
                                     <td className="px-6 py-4 font-medium">
                                         {flow.type}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className="bg-muted/50 px-2 py-0.5 rounded text-xs">{flow.date}</span>
+                                        <span className="bg-muted/50 px-2 py-0.5 rounded text-xs">
+                                            {new Date(flow.appointment_date).toLocaleDateString()} {new Date(flow.appointment_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2 text-xs">
-                                            {flow.method === 'Video Call' ? <Video className="h-3 w-3" /> : (flow.method === 'Phone Call' ? <Clock className="h-3 w-3" /> : <User className="h-3 w-3" />)}
-                                            {flow.method}
-                                        </div>
+                                        {flow.contact_person}
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${flow.status === 'Completed' ? 'bg-green-500/10 text-green-500' :
@@ -176,6 +166,11 @@ export function AppointmentsClient({ profile }: AppointmentsClientProps) {
                             ))}
                         </tbody>
                     </table>
+                    {appointments.length === 0 && (
+                        <div className="py-12 text-center text-muted-foreground italic text-xs">
+                            No active workflow steps found.
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

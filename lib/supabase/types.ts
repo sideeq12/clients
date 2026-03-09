@@ -42,6 +42,7 @@ export type Deadline = {
     status: string;
     escalated?: boolean;
     assigned_staff_id?: string;
+    created_at: string;
 };
 
 export type Case = {
@@ -55,6 +56,17 @@ export type Case = {
     stage: string;
     opened_date: string;
     assigned_staff_id?: string;
+};
+
+export type Appointment = {
+    id: string;
+    profile_id: string;
+    client_name: string;
+    type: string;
+    appointment_date: string;
+    status: string;
+    contact_person?: string;
+    created_at: string;
 };
 
 export type Staff = {

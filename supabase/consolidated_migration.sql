@@ -146,6 +146,18 @@ CREATE TABLE IF NOT EXISTS public.reports (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Appointments
+CREATE TABLE IF NOT EXISTS public.appointments (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    profile_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    client_name TEXT NOT NULL,
+    type TEXT,
+    appointment_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    status TEXT DEFAULT 'Scheduled',
+    contact_person TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- ==========================================
 -- 3. SECURITY & POLICIES (RLS)
 -- ==========================================
@@ -160,6 +172,7 @@ ALTER TABLE public.automation_activity ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.document_folders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
@@ -173,6 +186,7 @@ CREATE POLICY "Users can manage own activity" ON public.automation_activity FOR 
 CREATE POLICY "Users can manage own folders" ON public.document_folders FOR ALL USING (profile_id = auth.uid());
 CREATE POLICY "Users can manage own documents" ON public.documents FOR ALL USING (profile_id = auth.uid());
 CREATE POLICY "Users can manage own reports" ON public.reports FOR ALL USING (profile_id = auth.uid());
+CREATE POLICY "Users can manage own appointments" ON public.appointments FOR ALL USING (profile_id = auth.uid());
 
 -- ==========================================
 -- 4. SEED DATA

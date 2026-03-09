@@ -13,7 +13,8 @@ import {
     DocumentFolder,
     Document,
     Report,
-    PracticeArea
+    PracticeArea,
+    Appointment
 } from './types';
 
 // Mock Data Definitions
@@ -66,12 +67,12 @@ const MOCK_ENQUIRIES: Record<string, Enquiry[]> = {
 
 const MOCK_DEADLINES: Record<string, Deadline[]> = {
     'accounting-firm': [
-        { id: 'd1', task: 'VAT Return Filing', company_name: 'TechStart Ltd', type: 'Filing', due_date: '2024-03-31', priority: 'High', status: 'In Progress' },
-        { id: 'd2', task: 'Corporation Tax Payment', company_name: 'Elite Builders', type: 'Payment', due_date: '2024-04-15', priority: 'Medium', status: 'Pending' },
+        { id: 'd1', task: 'VAT Return Filing', company_name: 'TechStart Ltd', type: 'Filing', due_date: '2024-03-31', priority: 'High', status: 'In Progress', created_at: new Date().toISOString() },
+        { id: 'd2', task: 'Corporation Tax Payment', company_name: 'Elite Builders', type: 'Payment', due_date: '2024-04-15', priority: 'Medium', status: 'Pending', created_at: new Date().toISOString() },
     ],
     'law-firm': [
-        { id: 'ld1', task: 'Court Appearance', company_name: 'Urban Dev Group', type: 'Court', due_date: '2024-03-25', priority: 'High', status: 'In Progress', escalated: true },
-        { id: 'ld2', task: 'Contract Signature', company_name: 'Swift Solutions', type: 'Legal', due_date: '2024-04-01', priority: 'Medium', status: 'Pending' },
+        { id: 'ld1', task: 'Court Appearance', company_name: 'Urban Dev Group', type: 'Court', due_date: '2024-03-25', priority: 'High', status: 'In Progress', escalated: true, created_at: new Date().toISOString() },
+        { id: 'ld2', task: 'Contract Signature', company_name: 'Swift Solutions', type: 'Legal', due_date: '2024-04-01', priority: 'Medium', status: 'Pending', created_at: new Date().toISOString() },
     ]
 };
 
@@ -314,6 +315,20 @@ export async function getAutomationActivity() {
         .eq('profile_id', user.id);
 
     return (data || []) as AutomationActivity[];
+}
+
+export async function getAppointments() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const { data } = await supabase
+        .from('appointments')
+        .select('*')
+        .eq('profile_id', user.id)
+        .order('appointment_date', { ascending: true });
+
+    return (data || []) as Appointment[];
 }
 
 export async function getDocumentFolders() {

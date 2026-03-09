@@ -1,12 +1,16 @@
 import { AppointmentsClient } from "./AppointmentsClient";
-import { getProfile } from "@/lib/supabase/data-service";
+import { getProfile, getAppointments } from "@/lib/supabase/data-service";
 
 export default async function AppointmentsPage() {
-    const profile = await getProfile();
+    const [profile, appointments] = await Promise.all([
+        getProfile(),
+        getAppointments()
+    ]);
 
     return (
         <AppointmentsClient
             profile={profile}
+            appointments={appointments}
         />
     );
 }
