@@ -18,23 +18,55 @@ interface CasesClientProps {
     profile: Profile | null;
 }
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+        const data = payload[0].payload;
+        return (
+            <div className="bg-card border border-border p-3 rounded-lg shadow-lg text-[11px] max-w-[200px]">
+                <p className="font-bold mb-2 text-foreground border-b border-border pb-1">{label}</p>
+                <p className="text-primary font-semibold mb-2">New Cases: {data.count}</p>
+                <div className="space-y-2">
+                    {data.items && data.items.map((item: any, i: number) => (
+                        <div key={i} className="flex flex-col gap-0.5">
+                            <span className="font-semibold text-foreground truncate">{item.client}</span>
+                            <span className="text-muted-foreground italic text-[10px]">{item.type}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+    return null;
+};
+
 export function CasesClient({ cases, profile }: CasesClientProps) {
     const trendData = useMemo(() => {
-        // Pre-seeded realistic mock trend so the graph always shows data
-        const category = profile?.category;
-        const mockCounts = category === 'law-firm'
-            ? [2, 4, 3, 5, 2, 6, 4]
-            : [1, 3, 2, 4, 3, 5, 2];
-
-        return [...Array(7)].map((_, i) => {
+        const last7Days = [...Array(7)].map((_, i) => {
             const d = new Date();
             d.setDate(d.getDate() - (6 - i));
+            return d.toISOString().split('T')[0];
+        });
+
+        const dataByDay = cases.reduce((acc, c) => {
+            const dateStr = new Date(c.opened_date).toISOString().split('T')[0];
+            if (!acc[dateStr]) acc[dateStr] = { count: 0, items: [] };
+            acc[dateStr].count += 1;
+            acc[dateStr].items.push({
+                client: c.client_name || c.company_name,
+                type: c.case_type
+            });
+            return acc;
+        }, {} as Record<string, { count: number; items: any[] }>);
+
+        return last7Days.map((date) => {
+            const dayData = dataByDay[date] || { count: 0, items: [] };
             return {
-                day: d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-                count: mockCounts[i]
+                day: new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+                count: dayData.count,
+                items: dayData.items
             };
         });
-    }, [profile]);
+    }, [cases]);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-700">
@@ -94,9 +126,7 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                                 tickLine={false}
                                 tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
                             />
-                            <Tooltip
-                                contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', borderRadius: '8px', fontSize: '11px' }}
-                            />
+                            <Tooltip content={<CustomTooltip />} />
                             <Line type="monotone" dataKey="count" name="New Cases" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 4, fill: 'var(--primary)', strokeWidth: 2, stroke: 'var(--card)' }} activeDot={{ r: 6 }} />
                         </LineChart>
                     </ResponsiveContainer>

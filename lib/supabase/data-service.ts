@@ -216,7 +216,10 @@ export async function getDashboardStats(category: 'accounting' | 'law-firm' = 'a
             count: dayEnquiries.length,
             items: dayEnquiries.map(enq => ({
                 id: enq.id,
-                title: `${enq.client_name || enq.company_name} - ${enq.service_name}`
+                title: `${enq.client_name || enq.company_name} - ${enq.service_name}`,
+                status: enq.status,
+                priority: enq.priority,
+                source: enq.source
             }))
         };
     });

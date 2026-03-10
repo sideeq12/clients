@@ -235,6 +235,155 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
                 ))}
             </div>
 
+            {/* Standalone Daily Breakdown Table */}
+            <div className="p-6 rounded-xl bg-card border border-border/50 shadow-sm">
+                <div className="flex items-center gap-2 mb-6">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    <div>
+                        <h3 className="text-lg font-bold text-foreground/90">Daily Intake Breakdown</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">Detailed view of recent enquiries and leads.</p>
+                    </div>
+                </div>
+                <div className="overflow-x-auto rounded-xl border border-border/30 bg-muted/5">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] font-bold tracking-wider">
+                            <tr>
+                                <th className="px-6 py-4">Date</th>
+                                <th className="px-6 py-4">Intake Details</th>
+                                <th className="px-6 py-4 text-right">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/40">
+                            {[...stats.enquiriesTrend].reverse().filter(day => day.count > 0).map((day) => (
+                                <tr key={day.day} className="hover:bg-muted/10 transition-colors group/row">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-primary/5 text-primary/60 group-hover/row:bg-primary/10 group-hover/row:text-primary transition-colors">
+                                                <Clock className="h-3.5 w-3.5" />
+                                            </div>
+                                            <span className="font-bold text-foreground/90">{day.day}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex flex-col gap-2.5">
+                                            {day.items && day.items.length > 0 ? (
+                                                day.items.slice(0, 3).map((item: any, idx: number) => (
+                                                    <div key={item.id || idx} className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="h-1 w-1 rounded-full bg-primary" />
+                                                            <span className="text-[11px] font-semibold text-foreground/90 truncate max-w-[250px]">
+                                                                {item.title}
+                                                            </span>
+                                                            {item.status && (
+                                                                <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-tighter ${item.status === 'Active' ? 'bg-green-500/10 text-green-600' : 'bg-amber-500/10 text-amber-600'
+                                                                    }`}>
+                                                                    {item.status}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        {item.source && (
+                                                            <div className="pl-3 flex items-center gap-1.5 text-[9px] text-muted-foreground uppercase font-medium tracking-tight">
+                                                                <span>Source: {item.source}</span>
+                                                                {item.priority && <span>• Priority: {item.priority}</span>}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <span className="text-[11px] text-muted-foreground/50 italic">No activity recorded for this period</span>
+                                            )}
+                                            {day.items && day.items.length > 3 && (
+                                                <span className="text-[10px] text-primary/70 font-bold pl-3 mt-1 hover:underline cursor-pointer">
+                                                    + View {day.items.length - 3} more enquiries
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <span className={`inline-flex items-center justify-center min-w-[24px] px-1.5 py-0.5 rounded-full text-[11px] font-bold ${day.count > 0 ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground/40'}`}>
+                                            {day.count}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Upcoming Reminders Table */}
+            <div className="p-6 rounded-xl bg-card border border-border/50 shadow-sm mt-0">
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 className="text-lg font-bold text-foreground/90">Upcoming Reminders</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">Critical deadlines and tasks requiring attention.</p>
+                    </div>
+                    <a href="/dashboard/deadlines" className="text-xs font-bold text-primary hover:underline transition-all">View All</a>
+                </div>
+                <div className="overflow-x-auto -mx-6">
+                    <table className="w-full text-left text-sm whitespace-nowrap">
+                        <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider">
+                            <tr>
+                                <th className="px-6 py-3">Reminder Sent</th>
+                                <th className="px-6 py-3">Due Date</th>
+                                <th className="px-6 py-3 text-right">Index</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/50 font-medium">
+                            {deadlines.slice(0, 5).map((dl) => {
+                                // Risk logic refined as Urgency Index
+                                let riskLevel = 'Standard';
+                                const dueDate = new Date(dl.due_date);
+                                const today = new Date();
+                                today.setHours(0, 0, 0, 0);
+                                const diffTime = dueDate.getTime() - today.getTime();
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                                if (dl.escalated || (diffDays < 0)) riskLevel = 'High';
+                                else if (diffDays <= 3) riskLevel = 'Medium';
+
+                                return (
+                                    <tr key={dl.id} className="hover:bg-muted/10 transition-colors group/row">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 rounded-lg bg-primary/5 text-primary/60 group-hover/row:bg-primary/10 group-hover/row:text-primary transition-colors">
+                                                    <Mail className="h-4 w-4" />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-foreground/90 font-semibold max-w-[400px] truncate">
+                                                        {dl.task} <span className="text-muted-foreground font-normal">sent to</span> {dl.client_name || dl.company_name}
+                                                    </span>
+                                                    <span className="text-[10px] text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider font-bold">
+                                                        <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
+                                                        {formatTimeAgo(dl.created_at)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-muted-foreground">{new Date(dl.due_date).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 text-right">
+                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter ${riskLevel === 'High' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' :
+                                                riskLevel === 'Medium' ? 'bg-orange-500/10 text-orange-500' :
+                                                    'bg-green-500/10 text-green-500'
+                                                }`}>
+                                                {riskLevel === 'High' ? 'High Urgency' : `${riskLevel} Urgency`}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            {deadlines.length === 0 && (
+                                <tr>
+                                    <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground text-xs italic">
+                                        No upcoming reminders found.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             {/* Main Graphs */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Enquiry Trends */}
@@ -309,78 +458,6 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
                             </p>
                         )}
                     </div>
-                </div>
-            </div>
-            {/* Upcoming Reminders Table */}
-            <div className="p-6 rounded-xl bg-card border border-border/50 shadow-sm mt-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 className="text-lg font-bold text-foreground/90">Upcoming Reminders</h3>
-                        <p className="text-xs text-muted-foreground mt-0.5">Critical deadlines and tasks requiring attention.</p>
-                    </div>
-                    <a href="/dashboard/deadlines" className="text-xs font-bold text-primary hover:underline transition-all">View All</a>
-                </div>
-                <div className="overflow-x-auto -mx-6">
-                    <table className="w-full text-left text-sm whitespace-nowrap">
-                        <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider">
-                            <tr>
-                                <th className="px-6 py-3">Reminder Sent</th>
-                                <th className="px-6 py-3">Due Date</th>
-                                <th className="px-6 py-3 text-right">Index</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 font-medium">
-                            {deadlines.slice(0, 5).map((dl) => {
-                                // Risk logic refined as Urgency Index
-                                let riskLevel = 'Standard';
-                                const dueDate = new Date(dl.due_date);
-                                const today = new Date();
-                                today.setHours(0, 0, 0, 0);
-                                const diffTime = dueDate.getTime() - today.getTime();
-                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                                if (dl.escalated || (diffDays < 0)) riskLevel = 'High';
-                                else if (diffDays <= 3) riskLevel = 'Medium';
-
-                                return (
-                                    <tr key={dl.id} className="hover:bg-muted/10 transition-colors group/row">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-2 rounded-lg bg-primary/5 text-primary/60 group-hover/row:bg-primary/10 group-hover/row:text-primary transition-colors">
-                                                    <Mail className="h-4 w-4" />
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-foreground/90 font-semibold max-w-[400px] truncate">
-                                                        {dl.task} <span className="text-muted-foreground font-normal">sent to</span> {dl.client_name || dl.company_name}
-                                                    </span>
-                                                    <span className="text-[10px] text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider font-bold">
-                                                        <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
-                                                        {formatTimeAgo(dl.created_at)}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-muted-foreground">{new Date(dl.due_date).toLocaleDateString()}</td>
-                                        <td className="px-6 py-4 text-right">
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter ${riskLevel === 'High' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' :
-                                                riskLevel === 'Medium' ? 'bg-orange-500/10 text-orange-500' :
-                                                    'bg-green-500/10 text-green-500'
-                                                }`}>
-                                                {riskLevel === 'High' ? 'High Urgency' : `${riskLevel} Urgency`}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                            {deadlines.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground text-xs italic">
-                                        No upcoming reminders found.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
