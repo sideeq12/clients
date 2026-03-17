@@ -22,13 +22,16 @@ export type Company = {
 
 export type Enquiry = {
     id: string;
-    company_name: string;
-    client_name?: string;
-    service_name: string;
-    status: string;
-    priority: string;
-    source: string;
+    profile_id: string;
+    client_name: string;
     created_at: string;
+    company_name?: string;
+    contact_email?: string;
+    service_requested?: string;
+    lead_status: string;
+    case_summary?: string;
+    email_subject?: string;
+    phone?: string;
 };
 
 export type Deadline = {
@@ -47,14 +50,15 @@ export type Deadline = {
 
 export type Case = {
     id: string;
-    case_id_string: string;
-    company_name: string;
-    client_name?: string;
-    case_type: string;
-    solicitor: string;
-    status: string;
-    stage: string;
-    opened_date: string;
+    profile_id: string;
+    client_name: string;
+    created_at: string;
+    case_id_string?: string;
+    case_type?: string;
+    solicitor?: string;
+    status?: string;
+    stage?: string;
+    opened_date?: string;
     assigned_staff_id?: string;
 };
 

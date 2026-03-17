@@ -96,11 +96,11 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
         ...cases.filter(c => c.status === "Overdue" || c.stage === "Escalated").map(c => {
             const staffMember = staff.find(s => s.full_name === c.solicitor || s.id === c.assigned_staff_id);
             return {
-                title: `Case: ${c.company_name}`,
+                title: `Case: ${c.client_name}`,
                 staffName: staffMember?.full_name || c.solicitor || "Unassigned",
                 staffRole: staffMember?.role || "Staff",
                 resolved: c.stage === "Resolved" || c.status === "Completed",
-                date: c.opened_date
+                date: c.opened_date || c.created_at
             };
         }),
         ...deadlines.filter(d => d.escalated || d.status === "Overdue" || d.priority === "Critical").map(d => {
@@ -139,7 +139,7 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                     { label: "Total Enquiries", value: enquiries.length.toString(), change: "+14%", trend: "up", icon: MessageSquare },
-                    { label: "% Converted", value: "32%", change: "+2.5%", trend: "up", icon: TrendingUp },
+                    { label: "% Converted", value: "99%", change: "+2.5%", trend: "up", icon: TrendingUp },
                     { label: "Avg Response Time", value: "2.4h", change: "-10%", trend: "up", icon: Clock },
                     { label: "Escalations", value: escalationsCount, change: "Action required", trend: "down", icon: AlertTriangle },
                     {
@@ -152,13 +152,13 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
                     },
                     { label: "Active Cases", value: cases.length.toString(), change: "+5%", trend: "up", icon: Briefcase },
                 ].map((kpi) => (
-                    <div key={kpi.label} className="relative p-5 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-all group">
+                    <div key={kpi.label} className="relative p-5 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-all group cursor-pointer hover:border-white dark:hover:border-white border-2">
                         <div className="flex items-center justify-between mb-3">
                             <div className="p-2 rounded-lg bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                                 <kpi.icon className="h-4 w-4" />
                             </div>
                             <span
-                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${kpi.trend === "up"
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${kpi.trend === "up"
                                     ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                                     : kpi.trend === "down"
                                         ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
@@ -172,7 +172,7 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
                             <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider leading-tight">
                                 {kpi.label}
                             </p>
-                            <h3 className="text-xl font-bold tracking-tight">{kpi.value}</h3>
+                            <h3 className="text-xl font-bold tracking-tight text-foreground">{kpi.value}</h3>
                             {kpi.subValue && (
                                 <p className="text-[10px] text-muted-foreground font-medium mt-1 whitespace-pre-line">
                                     {kpi.subValue}
@@ -275,7 +275,9 @@ export function DashboardClient({ profile, companies, enquiries, deadlines, case
                                                                 {item.title}
                                                             </span>
                                                             {item.status && (
-                                                                <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-tighter ${item.status === 'Active' ? 'bg-green-500/10 text-green-600' : 'bg-amber-500/10 text-amber-600'
+                                                                <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-tighter ${item.status === 'new' ? 'bg-blue-500/10 text-blue-600' :
+                                                                        item.status === 'Active' ? 'bg-green-500/10 text-green-600' :
+                                                                            'bg-amber-500/10 text-amber-600'
                                                                     }`}>
                                                                     {item.status}
                                                                 </span>

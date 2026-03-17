@@ -46,12 +46,23 @@ export async function login(prevState: unknown, formData: FormData) {
 }
 
 export async function signOut() {
-    const supabase = await createClient()
-    await supabase.auth.signOut()
+    try {
+        const supabase = await createClient()
+        const { error } = await supabase.auth.signOut()
 
-    const cookieStore = await cookies()
-    cookieStore.delete('portal_category')
+        if (error) {
+            console.error('Error signing out:', error.message)
+            return { error: error.message }
+        }
 
-    revalidatePath('/', 'layout')
+        const cookieStore = await cookies()
+        cookieStore.delete('portal_category')
+
+        revalidatePath('/', 'layout')
+    } catch (err) {
+        console.error('Unexpected error during signout:', err)
+        return { error: 'An unexpected error occurred during sign out.' }
+    }
+
     redirect('/login')
 }

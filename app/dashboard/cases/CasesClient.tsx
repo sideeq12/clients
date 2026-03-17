@@ -48,12 +48,13 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
         });
 
         const dataByDay = cases.reduce((acc, c) => {
-            const dateStr = new Date(c.opened_date).toISOString().split('T')[0];
+            const caseDate = c.opened_date || c.created_at;
+            const dateStr = new Date(caseDate).toISOString().split('T')[0];
             if (!acc[dateStr]) acc[dateStr] = { count: 0, items: [] };
             acc[dateStr].count += 1;
             acc[dateStr].items.push({
-                client: c.client_name || c.company_name,
-                type: c.case_type
+                client: c.client_name,
+                type: c.case_type || 'General'
             });
             return acc;
         }, {} as Record<string, { count: number; items: any[] }>);
@@ -160,10 +161,10 @@ export function CasesClient({ cases, profile }: CasesClientProps) {
                         <tbody className="divide-y divide-border/50">
                             {cases.map((item) => (
                                 <tr key={item.id} className="hover:bg-muted/20 transition-colors">
-                                    <td className="px-6 py-4 font-bold text-primary">{item.case_id_string}</td>
-                                    <td className="px-6 py-4 font-medium">{item.client_name || item.company_name}</td>
-                                    <td className="px-6 py-4 font-medium">{item.solicitor}</td>
-                                    <td className="px-6 py-4 text-muted-foreground">{new Date(item.opened_date).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 font-bold text-primary">{item.case_id_string || 'N/A'}</td>
+                                    <td className="px-6 py-4 font-medium">{item.client_name}</td>
+                                    <td className="px-6 py-4 font-medium">{item.solicitor || 'Unassigned'}</td>
+                                    <td className="px-6 py-4 text-muted-foreground">{item.opened_date ? new Date(item.opened_date).toLocaleDateString() : 'N/A'}</td>
                                     <td className="px-6 py-4">
                                         <span className="text-xs font-semibold capitalize text-foreground/80 bg-muted/50 px-2 py-1 rounded-md">
                                             {(item.stage || 'Intake').replace(/_/g, ' ')}

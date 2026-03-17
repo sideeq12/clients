@@ -56,12 +56,12 @@ const MOCK_COMPANIES: Record<string, Company[]> = {
 
 const MOCK_ENQUIRIES: Record<string, Enquiry[]> = {
     'accounting-firm': [
-        { id: 'e1', company_name: 'New Ventures Ltd', service_name: 'Company Formation', status: 'Active', priority: 'High', source: 'Website', created_at: new Date().toISOString() },
-        { id: 'e2', company_name: 'Solo Trader', service_name: 'Self Assessment', status: 'Pending', priority: 'Medium', source: 'Referral', created_at: new Date(Date.now() - 86400000).toISOString() },
+        { id: 'e1', profile_id: '1', client_name: 'John Doe', company_name: 'New Ventures Ltd', service_requested: 'Company Formation', lead_status: 'new', created_at: new Date().toISOString() },
+        { id: 'e2', profile_id: '1', client_name: 'Jane Smith', company_name: 'Solo Trader', service_requested: 'Self Assessment', lead_status: 'Active', created_at: new Date(Date.now() - 86400000).toISOString() },
     ],
     'law-firm': [
-        { id: 'le1', company_name: 'Urban Dev Group', service_name: 'Planning Dispute', status: 'Active', priority: 'High', source: 'direct', created_at: new Date().toISOString() },
-        { id: 'le2', company_name: 'Family Estate', service_name: 'Will Writing', status: 'Resolved', priority: 'Low', source: 'Referral', created_at: new Date(Date.now() - 172800000).toISOString() },
+        { id: 'le1', profile_id: '2', client_name: 'Alice Wong', company_name: 'Urban Dev Group', service_requested: 'Planning Dispute', lead_status: 'new', created_at: new Date().toISOString() },
+        { id: 'le2', profile_id: '2', client_name: 'Peter Parker', company_name: 'Family Estate', service_requested: 'Will Writing', lead_status: 'Completed', created_at: new Date(Date.now() - 172800000).toISOString() },
     ]
 };
 
@@ -78,23 +78,14 @@ const MOCK_DEADLINES: Record<string, Deadline[]> = {
 
 const MOCK_CASES: Record<string, Case[]> = {
     'accounting-firm': [
-        { id: 'ac1', case_id_string: 'ACC-2024-001', company_name: 'TechStart Ltd', case_type: 'Corporation Tax', solicitor: 'Sarah Jenkins', status: 'Active', stage: 'In Review', opened_date: '2024-02-20' },
-        { id: 'ac2', case_id_string: 'ACC-2024-002', company_name: 'Green Gardeners', case_type: 'VAT Dispute', solicitor: 'David Blake', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-22' },
-        { id: 'ac3', case_id_string: 'ACC-2024-003', company_name: 'Elite Builders', case_type: 'Payroll Audit', solicitor: 'Sarah Jenkins', status: 'Active', stage: 'Data Collection', opened_date: '2024-02-18' },
-        { id: 'ac4', case_id_string: 'ACC-2024-004', company_name: 'Bright Interiors', case_type: 'Self Assessment', solicitor: 'Anna Lee', status: 'Paused', stage: 'Awaiting Documents', opened_date: '2024-02-15' },
-        { id: 'ac5', case_id_string: 'ACC-2024-005', company_name: 'Falcon Logistics', case_type: 'HMRC Enquiry', solicitor: 'David Blake', status: 'Overdue', stage: 'Response Drafting', opened_date: '2024-02-10' },
-        { id: 'ac6', case_id_string: 'ACC-2023-041', company_name: 'Northern Foods Co.', case_type: 'Annual Accounts', solicitor: 'Anna Lee', status: 'Completed', stage: 'Completed', opened_date: '2023-11-01' },
-        { id: 'ac7', case_id_string: 'ACC-2024-006', company_name: 'Summit Retail', case_type: 'Tax Planning', solicitor: 'Sarah Jenkins', status: 'Cancelled', stage: 'N/A', opened_date: '2024-01-20' },
+        { id: 'ac1', profile_id: '1', client_name: 'TechStart Ltd', case_id_string: 'ACC-2024-001', case_type: 'Corporation Tax', solicitor: 'Sarah Jenkins', status: 'Active', stage: 'In Review', opened_date: '2024-02-20', created_at: new Date().toISOString() },
+        { id: 'ac2', profile_id: '1', client_name: 'Green Gardeners', case_id_string: 'ACC-2024-002', case_type: 'VAT Dispute', solicitor: 'David Blake', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-22', created_at: new Date().toISOString() },
+        { id: 'ac3', profile_id: '1', client_name: 'Elite Builders', case_id_string: 'ACC-2024-003', case_type: 'Payroll Audit', solicitor: 'Sarah Jenkins', status: 'Active', stage: 'Data Collection', opened_date: '2024-02-18', created_at: new Date().toISOString() },
     ],
     'law-firm': [
-        { id: 'lc1', case_id_string: 'LF-2024-001', company_name: 'Global Logistics', case_type: 'Merger & Acquisition', solicitor: 'Marcus Thorne', status: 'Active', stage: 'Due Diligence', opened_date: '2024-01-15' },
-        { id: 'lc2', case_id_string: 'LF-2024-002', company_name: 'Heritage Homes', case_type: 'Property Conveyancing', solicitor: 'Jane Doe', status: 'Active', stage: 'Exchange Contracts', opened_date: '2024-02-01' },
-        { id: 'lc3', case_id_string: 'LF-2024-003', company_name: 'Swift Solutions', case_type: 'Employment Dispute', solicitor: 'Marcus Thorne', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-10' },
-        { id: 'lc4', case_id_string: 'LF-2024-004', company_name: 'Urban Dev Group', case_type: 'Planning Appeal', solicitor: 'Rachel Green', status: 'Paused', stage: 'Discovery', opened_date: '2024-02-14' },
-        { id: 'lc5', case_id_string: 'LF-2024-005', company_name: 'Family Estate', case_type: 'Probate & Wills', solicitor: 'Rachel Green', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-20' },
-        { id: 'lc6', case_id_string: 'LF-2024-006', company_name: 'Midtown Retail', case_type: 'Commercial Lease', solicitor: 'Jane Doe', status: 'Active', stage: 'Negotiation', opened_date: '2024-02-22' },
-        { id: 'lc7', case_id_string: 'LF-2023-089', company_name: 'Apex Corp', case_type: 'Litigation', solicitor: 'Marcus Thorne', status: 'Completed', stage: 'Settled', opened_date: '2023-10-05' },
-        { id: 'lc8', case_id_string: 'LF-2024-007', company_name: 'Riverstone Group', case_type: 'Corporate Restructuring', solicitor: 'Jane Doe', status: 'Cancelled', stage: 'N/A', opened_date: '2024-01-30' },
+        { id: 'lc1', profile_id: '2', client_name: 'Global Logistics', case_id_string: 'LF-2024-001', case_type: 'Merger & Acquisition', solicitor: 'Marcus Thorne', status: 'Active', stage: 'Due Diligence', opened_date: '2024-01-15', created_at: new Date().toISOString() },
+        { id: 'lc2', profile_id: '2', client_name: 'Heritage Homes', case_id_string: 'LF-2024-002', case_type: 'Property Conveyancing', solicitor: 'Jane Doe', status: 'Active', stage: 'Exchange Contracts', opened_date: '2024-02-01', created_at: new Date().toISOString() },
+        { id: 'lc3', profile_id: '2', client_name: 'Swift Solutions', case_id_string: 'LF-2024-003', case_type: 'Employment Dispute', solicitor: 'Marcus Thorne', status: 'Overdue', stage: 'Escalated', opened_date: '2024-02-10', created_at: new Date().toISOString() },
     ]
 };
 
@@ -152,7 +143,7 @@ export async function getEnquiries() {
     if (!user) return [];
 
     const { data: enquiries } = await supabase
-        .from('enquiries')
+        .from('client_leads')
         .select('*')
         .eq('profile_id', user.id);
 
@@ -216,10 +207,10 @@ export async function getDashboardStats(category: 'accounting' | 'law-firm' = 'a
             count: dayEnquiries.length,
             items: dayEnquiries.map(enq => ({
                 id: enq.id,
-                title: `${enq.client_name || enq.company_name} - ${enq.service_name}`,
-                status: enq.status,
-                priority: enq.priority,
-                source: enq.source
+                title: `${enq.client_name} - ${enq.service_requested || 'General Enquiry'}`,
+                status: enq.lead_status, 
+                priority: 'Medium', 
+                source: 'Email' 
             }))
         };
     });
@@ -273,7 +264,8 @@ export async function getDashboardStats(category: 'accounting' | 'law-firm' = 'a
             const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 
             const dayCases = cases.filter(c => {
-                const cDate = new Date(c.opened_date);
+                const caseDate = c.opened_date || c.created_at;
+                const cDate = new Date(caseDate);
                 return cDate.getDate() === d.getDate() &&
                     cDate.getMonth() === d.getMonth() &&
                     cDate.getFullYear() === d.getFullYear();
@@ -284,7 +276,7 @@ export async function getDashboardStats(category: 'accounting' | 'law-firm' = 'a
                 count: dayCases.length,
                 items: dayCases.map(c => ({
                     id: c.id,
-                    title: `${c.client_name || c.company_name} - ${c.case_type}`,
+                    title: `${c.client_name} - ${c.case_type || 'General Case'}`,
                     solicitor: c.solicitor,
                     stage: c.stage
                 }))

@@ -39,9 +39,9 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                    { label: "Active", count: enquiries.filter(e => e.status === 'Active').length, icon: Clock, color: "text-blue-500" },
-                    { label: "Pending", count: enquiries.filter(e => e.status === 'Pending').length, icon: AlertCircle, color: "text-amber-500" },
-                    { label: "Completed", count: enquiries.filter(e => e.status === 'Resolved' || e.status === 'Completed').length, icon: CheckCircle2, color: "text-green-500" },
+                    { label: "New", count: enquiries.filter(e => e.lead_status === 'new').length, icon: AlertCircle, color: "text-blue-500" },
+                    { label: "Active", count: enquiries.filter(e => e.lead_status === 'Active' || e.lead_status === 'In Progress').length, icon: Clock, color: "text-amber-500" },
+                    { label: "Completed", count: enquiries.filter(e => e.lead_status === 'Resolved' || e.lead_status === 'Completed').length, icon: CheckCircle2, color: "text-green-500" },
                 ].map((stat) => (
                     <div key={stat.label} className="p-4 rounded-xl bg-card border border-border/50 shadow-sm flex items-center gap-4">
                         <div className={`p-2 rounded-lg bg-muted ${stat.color}`}>
@@ -74,7 +74,7 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
                                 <th className="py-3 px-4">
                                     {category === "law-firm" ? "Practice Area" : "Service"}
                                 </th>
-                                <th className="py-3 px-4">Priority</th>
+                                <th className="py-3 px-4">Contact</th>
                                 <th className="py-3 px-4">Date</th>
                                 <th className="py-3 px-4">Status</th>
                                 <th className="py-3 px-4 text-right">Actions</th>
@@ -84,30 +84,25 @@ export function EnquiriesClient({ enquiries, profile }: EnquiriesClientProps) {
                             {enquiries.map((enq) => (
                                 <tr key={enq.id} className="hover:bg-muted/30 transition-colors">
                                     <td className="py-4 px-4">
-                                        <div className="font-semibold">{enq.client_name || enq.company_name}</div>
-                                        <div className="text-[10px] text-muted-foreground">{enq.source}</div>
+                                        <div className="font-semibold">{enq.client_name}</div>
+                                        <div className="text-[10px] text-muted-foreground">{enq.company_name || enq.contact_email}</div>
                                     </td>
-                                    <td className="py-4 px-4 text-muted-foreground">{enq.service_name}</td>
+                                    <td className="py-4 px-4 text-muted-foreground">{enq.service_requested || 'General Inquiry'}</td>
                                     <td className="py-4 px-4">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${enq.priority === 'Critical' ? 'bg-red-500/10 text-red-500' :
-                                            enq.priority === 'High' ? 'bg-orange-500/10 text-orange-500' :
-                                                enq.priority === 'Medium' ? 'bg-blue-500/10 text-blue-500' :
-                                                    'bg-slate-500/10 text-slate-500'
-                                            }`}>
-                                            {enq.priority}
-                                        </span>
+                                        <div className="text-xs">{enq.contact_email || 'No Email'}</div>
+                                        <div className="text-[10px] text-muted-foreground">{enq.phone || 'No Phone'}</div>
                                     </td>
                                     <td className="py-4 px-4 text-muted-foreground">{new Date(enq.created_at).toLocaleDateString()}</td>
                                     <td className="py-4 px-4">
-                                        <span className={`flex items-center gap-1.5 ${enq.status === 'Active' ? 'text-blue-500' :
-                                            enq.status === 'Resolved' || enq.status === 'Completed' ? 'text-green-500' :
+                                        <span className={`flex items-center gap-1.5 ${enq.lead_status === 'new' ? 'text-blue-500' :
+                                            enq.lead_status === 'Resolved' || enq.lead_status === 'Completed' ? 'text-green-500' :
                                                 'text-amber-500'
                                             }`}>
-                                            <div className={`h-1.5 w-1.5 rounded-full ${enq.status === 'Active' ? 'bg-blue-500' :
-                                                enq.status === 'Resolved' || enq.status === 'Completed' ? 'bg-green-500' :
+                                            <div className={`h-1.5 w-1.5 rounded-full ${enq.lead_status === 'new' ? 'bg-blue-500' :
+                                                enq.lead_status === 'Resolved' || enq.lead_status === 'Completed' ? 'bg-green-500' :
                                                     'bg-amber-500'
                                                 }`} />
-                                            <span className="font-medium">{enq.status}</span>
+                                            <span className="font-medium capitalize">{enq.lead_status}</span>
                                         </span>
                                     </td>
                                     <td className="py-4 px-4 text-right">
