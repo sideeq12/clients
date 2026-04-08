@@ -18,7 +18,8 @@ import {
     Activity,
     Briefcase,
     Menu,
-    LogOut
+    LogOut,
+    FileSpreadsheet,
 } from "lucide-react";
 import { Logo } from "./logo";
 import { signOut } from "@/app/login/actions";
@@ -35,6 +36,7 @@ export function Sidebar({ isMobileOpen, onClose, category = 'accounting' }: { is
             { name: "Reminders", icon: Clock, href: "/dashboard/deadlines" },
             { name: "Appointments", icon: Users, href: "/dashboard/appointments" },
             { name: "Reports", icon: BarChart3, href: "/dashboard/reports" },
+            { name: "Data Cleaning", icon: FileSpreadsheet, href: "/dashboard/data-cleaning" },
         ];
     }, [category]);
 
