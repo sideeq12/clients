@@ -1,0 +1,16 @@
+Name,Email,Date of Birth,Transaction Amount,Phone,City
+John Smith,john@gmail.com,15/03/1990,1500.00,+44 7700 900001,London
+Jon Smith,jon@gmial.com,March 15 1990,1500,+447700900001,london
+Jane Doe,jane@yahoo.com,2nd June 2025,2300.50,+44 7700 900002,Manchester
+Jane Doe,jane@yahoo.com,2nd June 2025,2300.50,+44 7700 900002,Manchester
+Bob Wilson,,12-04-1985,750.25,+44 7700 900003,Birmingham
+Alice Brown,alice@gmail.com,1985/04/12,,+44 7700 900004,
+Charlie Davis,charlie@gmail.com,July 8th 2000,3200,+44 7700 900005,Leeds
+Jhon Smith,jhon@gmail.com,15 Mar 1990,1500.00,+44 7700 900001,London
+,missing@email.com,01/01/2000,500.00,+44 7700 900006,Bristol
+Frank White,frank@gmail.com,,890.00,,Edinburgh
+Bob Wilson,,12-04-1985,750.25,+44 7700 900003,Birmingham
+Grace Lee,grace@hotmail.com,2025-06-02,1750,+44 7700 900007,Cardiff
+David Clark,david@gmail.com,14th February 1995,4500.00,+44 7700 900008,Glasgow
+David Clark,david@gmail.com,14th February 1995,4500.00,+44 7700 900008,Glasgow
+Eva Green,eva@gmail.com,30/11/1988,3100.75,+44 7700 900009,Liverpool
